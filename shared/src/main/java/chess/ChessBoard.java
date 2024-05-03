@@ -7,6 +7,7 @@ package chess;
  * signature of the existing methods.
  */
 public class ChessBoard {
+    static ChessPiece[][] board = new ChessPiece[8][8]; //make private!!!!!!!!
 
     public ChessBoard() {
         
@@ -19,7 +20,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        throw new RuntimeException("Not implemented");
+        board[position.getRow()][position.getColumn()] = piece;
     }
 
     /**
@@ -30,7 +31,11 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        throw new RuntimeException("Not implemented");
+        if (board[position.getRow()][position.getColumn()] == null){
+            return null;
+        }
+        else
+            return board[position.getRow()][position.getColumn()];
     }
 
     /**
@@ -38,6 +43,15 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        throw new RuntimeException("Not implemented");
+        //pawns
+        for (int i = 0; i < board.length; i++) {
+            addPiece(new ChessPosition(2, i+1), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
+            addPiece(new ChessPosition(7, i+1), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
+        }
+        for (int i = 0; i < board.length; i++){
+            if (i == 1){
+
+            }
+        }
     }
 }
