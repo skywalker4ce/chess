@@ -64,6 +64,8 @@ public class PieceMoves {
             else {
                 ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
                 moves.add(myChessMove);
+                if (board.getPiece(currentPosition).getPieceType() == ChessPiece.PieceType.KING)
+                    break;
             }
         }
     }
@@ -118,6 +120,8 @@ public class PieceMoves {
             else {
                 ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
                 moves.add(myChessMove);
+                if (board.getPiece(currentPosition).getPieceType() == ChessPiece.PieceType.KING)
+                    break;
             }
         }
     }
@@ -147,6 +151,12 @@ public class PieceMoves {
     }
 
     public ArrayList<ChessMove> queenMoves(){
+        bishopMoves();
+        rookMoves();
+        return moves;
+    }
+
+    public ArrayList<ChessMove> kingMoves(){
         bishopMoves();
         rookMoves();
         return moves;
