@@ -74,6 +74,11 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return new ArrayList<>();
+        PieceMoves pieceMoves = new PieceMoves(board, myPosition);
+        if (this.type == PieceType.BISHOP){
+            ArrayList<ChessMove> moves =  pieceMoves.bishopMoves();
+            return moves;
+        }
+        return null;
     }
 }

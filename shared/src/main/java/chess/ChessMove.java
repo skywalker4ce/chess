@@ -33,6 +33,15 @@ public class ChessMove {
         return Objects.hash(startPosition, endPosition, promotionPiece);
     }
 
+    @Override
+    public String toString() {
+        return "ChessMove{" +
+                "startPosition=" + startPosition +
+                ", endPosition=" + endPosition +
+                ", promotionPiece=" + promotionPiece +
+                '}';
+    }
+
     /**
      * @return ChessPosition of starting location
      */
@@ -54,6 +63,10 @@ public class ChessMove {
      * @return Type of piece to promote a pawn to, or null if no promotion
      */
     public ChessPiece.PieceType getPromotionPiece() {
-        return promotionPiece;
+        if (promotionPiece == ChessPiece.PieceType.PAWN){
+            return promotionPiece;
+        }
+        else
+            return null;
     }
 }
