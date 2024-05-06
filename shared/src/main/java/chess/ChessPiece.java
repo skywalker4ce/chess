@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -28,6 +29,19 @@ public class ChessPiece {
         KNIGHT,
         ROOK,
         PAWN
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessPiece that = (ChessPiece) o;
+        return pieceColor == that.pieceColor && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, type);
     }
 
     @Override
@@ -60,21 +74,6 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        ArrayList<ChessMove> moves = new ArrayList<>();
-        if (type == PieceType.BISHOP){
-            ChessPosition diffPosition = myPosition;
-            //right up
-            while (board.getPiece(diffPosition) != null){
-                diffPosition = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()+1);
-                moves.add(new ChessMove(myPosition, diffPosition, PieceType.QUEEN));
-            }
-        }
-        ChessPosition diffPosition = myPosition;
-        //right up
-        while (board.getPiece(diffPosition) != null) {
-            diffPosition = new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() + 1);
-            moves.add(new ChessMove(myPosition, diffPosition, PieceType.QUEEN));
-        }
         return new ArrayList<>();
     }
 }
