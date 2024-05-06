@@ -145,4 +145,10 @@ public class PieceMoves {
         straight(direction);
         return moves;
     }
+
+    public ArrayList<ChessMove> queenMoves(){
+        bishopMoves();
+        rookMoves();
+        return moves;
+    }
 }

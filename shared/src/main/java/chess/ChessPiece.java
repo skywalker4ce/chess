@@ -83,6 +83,10 @@ public class ChessPiece {
             ArrayList<ChessMove> moves =  pieceMoves.rookMoves();
             return moves;
         }
+        else if (this.type == PieceType.QUEEN){
+            ArrayList<ChessMove> moves = pieceMoves.queenMoves();
+            return moves;
+        }
         return null;
     }
 }
