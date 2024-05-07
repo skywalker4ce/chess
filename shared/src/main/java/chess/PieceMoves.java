@@ -329,7 +329,12 @@ public class PieceMoves {
                 row = currentRow + 2;
                 col = currentCol;
                 nextPosition = new ChessPosition(++row, ++col);
-                if (board.getPiece(nextPosition) == null) {
+                currentRow = currentPosition.getRow();
+                currentCol = currentPosition.getColumn();
+                row = currentRow + 1;
+                col = currentCol;
+                ChessPosition otherPosition = new ChessPosition(++row, ++col);
+                if (board.getPiece(nextPosition) == null && board.getPiece(otherPosition) == null) {
                     ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
                     moves.add(myChessMove);
                 }
@@ -410,7 +415,12 @@ public class PieceMoves {
                 row = currentRow - 2;
                 col = currentCol;
                 nextPosition = new ChessPosition(++row, ++col);
-                if (board.getPiece(nextPosition) == null) {
+                currentRow = currentPosition.getRow();
+                currentCol = currentPosition.getColumn();
+                row = currentRow - 1;
+                col = currentCol;
+                ChessPosition otherPosition = new ChessPosition(++row, ++col);
+                if (board.getPiece(nextPosition) == null && board.getPiece(otherPosition) == null) {
                     ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
                     moves.add(myChessMove);
                 }
