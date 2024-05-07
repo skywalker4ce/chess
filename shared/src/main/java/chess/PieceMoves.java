@@ -137,28 +137,14 @@ public class PieceMoves {
                 int row = currentRow - 2;
                 int col = currentCol + 1;
                 nextPosition = new ChessPosition(++row, ++col);
-                if ((board.getPiece(nextPosition) != null) && (board.getPiece(nextPosition).getTeamColor() != board.getPiece(currentPosition).getTeamColor())) {
-                    ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
-                    moves.add(myChessMove);
-                }
-                else if (board.getPiece(nextPosition) == null) {
-                    ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
-                    moves.add(myChessMove);
-                }
+                addMovesFunc(nextPosition);
             }
 
             if (currentCol > 0) {
                 int row = currentRow - 2;
                 int col = currentCol - 1;
                 nextPosition = new ChessPosition(++row, ++col);
-                if ((board.getPiece(nextPosition) != null) && (board.getPiece(nextPosition).getTeamColor() != board.getPiece(currentPosition).getTeamColor())) {
-                    ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
-                    moves.add(myChessMove);
-                }
-                else if (board.getPiece(nextPosition) == null) {
-                    ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
-                    moves.add(myChessMove);
-                }
+                addMovesFunc(nextPosition);
             }
         }
         if (currentCol > 1){
@@ -166,28 +152,14 @@ public class PieceMoves {
                 int row = currentRow + 1;
                 int col = currentCol - 2;
                 nextPosition = new ChessPosition(++row, ++col);
-                if ((board.getPiece(nextPosition) != null) && (board.getPiece(nextPosition).getTeamColor() != board.getPiece(currentPosition).getTeamColor())) {
-                    ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
-                    moves.add(myChessMove);
-                }
-                else if (board.getPiece(nextPosition) == null) {
-                    ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
-                    moves.add(myChessMove);
-                }
+                addMovesFunc(nextPosition);
             }
 
             if (currentRow > 0) {
                 int row = currentRow - 1;
                 int col = currentCol - 2;
                 nextPosition = new ChessPosition(++row, ++col);
-                if ((board.getPiece(nextPosition) != null) && (board.getPiece(nextPosition).getTeamColor() != board.getPiece(currentPosition).getTeamColor())) {
-                    ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
-                    moves.add(myChessMove);
-                }
-                else if (board.getPiece(nextPosition) == null) {
-                    ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
-                    moves.add(myChessMove);
-                }
+                addMovesFunc(nextPosition);
             }
         }
 
@@ -196,28 +168,14 @@ public class PieceMoves {
                 int row = currentRow - 1;
                 int col = currentCol + 2;
                 nextPosition = new ChessPosition(++row, ++col);
-                if ((board.getPiece(nextPosition) != null) && (board.getPiece(nextPosition).getTeamColor() != board.getPiece(currentPosition).getTeamColor())) {
-                    ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
-                    moves.add(myChessMove);
-                }
-                else if (board.getPiece(nextPosition) == null) {
-                    ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
-                    moves.add(myChessMove);
-                }
+                addMovesFunc(nextPosition);
             }
 
             if (currentRow < 7) {
                 int row = currentRow + 1;
                 int col = currentCol + 2;
                 nextPosition = new ChessPosition(++row, ++col);
-                if ((board.getPiece(nextPosition) != null) && (board.getPiece(nextPosition).getTeamColor() != board.getPiece(currentPosition).getTeamColor())) {
-                    ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
-                    moves.add(myChessMove);
-                }
-                else if (board.getPiece(nextPosition) == null) {
-                    ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
-                    moves.add(myChessMove);
-                }
+                addMovesFunc(nextPosition);
             }
         }
 
@@ -226,28 +184,14 @@ public class PieceMoves {
                 int row = currentRow + 2;
                 int col = currentCol + 1;
                 nextPosition = new ChessPosition(++row, ++col);
-                if ((board.getPiece(nextPosition) != null) && (board.getPiece(nextPosition).getTeamColor() != board.getPiece(currentPosition).getTeamColor())) {
-                    ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
-                    moves.add(myChessMove);
-                }
-                else if (board.getPiece(nextPosition) == null) {
-                    ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
-                    moves.add(myChessMove);
-                }
+                addMovesFunc(nextPosition);
             }
 
             if (currentCol > 0) {
                 int row = currentRow + 2;
                 int col = currentCol - 1;
                 nextPosition = new ChessPosition(++row, ++col);
-                if ((board.getPiece(nextPosition) != null) && (board.getPiece(nextPosition).getTeamColor() != board.getPiece(currentPosition).getTeamColor())) {
-                    ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
-                    moves.add(myChessMove);
-                }
-                else if (board.getPiece(nextPosition) == null) {
-                    ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
-                    moves.add(myChessMove);
-                }
+                addMovesFunc(nextPosition);
             }
         }
     }
@@ -263,14 +207,7 @@ public class PieceMoves {
             nextPosition = new ChessPosition(++row, ++col);
             if (board.getPiece(nextPosition) == null) {
                 if (currentPosition.getRow() == 6){
-                    ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.KNIGHT);
-                    moves.add(myChessMove);
-                    myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.QUEEN);
-                    moves.add(myChessMove);
-                    myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.ROOK);
-                    moves.add(myChessMove);
-                    myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.BISHOP);
-                    moves.add(myChessMove);
+                    promotionPieceFunc(nextPosition);
                 }
                 else {
                     ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
@@ -285,14 +222,7 @@ public class PieceMoves {
                 nextPosition = new ChessPosition(++row, ++col);
                 if ((board.getPiece(nextPosition) != null) && ((board.getPiece(currentPosition).getTeamColor() != board.getPiece(nextPosition).getTeamColor()))) {
                     if (currentPosition.getRow() == 6){
-                        ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.KNIGHT);
-                        moves.add(myChessMove);
-                        myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.QUEEN);
-                        moves.add(myChessMove);
-                        myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.ROOK);
-                        moves.add(myChessMove);
-                        myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.BISHOP);
-                        moves.add(myChessMove);
+                        promotionPieceFunc(nextPosition);
                     }
                     else {
                         ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
@@ -308,14 +238,7 @@ public class PieceMoves {
                 nextPosition = new ChessPosition(++row, ++col);
                 if ((board.getPiece(nextPosition) != null) && ((board.getPiece(currentPosition).getTeamColor() != board.getPiece(nextPosition).getTeamColor()))) {
                     if (currentPosition.getRow() == 6){
-                        ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.KNIGHT);
-                        moves.add(myChessMove);
-                        myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.QUEEN);
-                        moves.add(myChessMove);
-                        myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.ROOK);
-                        moves.add(myChessMove);
-                        myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.BISHOP);
-                        moves.add(myChessMove);
+                        promotionPieceFunc(nextPosition);
                     }
                     else {
                         ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
@@ -349,14 +272,7 @@ public class PieceMoves {
             nextPosition = new ChessPosition(++row, ++col);
             if (board.getPiece(nextPosition) == null) {
                 if (currentPosition.getRow() == 1){
-                    ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.KNIGHT);
-                    moves.add(myChessMove);
-                    myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.QUEEN);
-                    moves.add(myChessMove);
-                    myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.ROOK);
-                    moves.add(myChessMove);
-                    myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.BISHOP);
-                    moves.add(myChessMove);
+                    promotionPieceFunc(nextPosition);
                 }
                 else {
                     ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
@@ -371,14 +287,7 @@ public class PieceMoves {
                 nextPosition = new ChessPosition(++row, ++col);
                 if ((board.getPiece(nextPosition) != null) && ((board.getPiece(currentPosition).getTeamColor() != board.getPiece(nextPosition).getTeamColor()))) {
                     if (currentPosition.getRow() == 1){
-                        ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.KNIGHT);
-                        moves.add(myChessMove);
-                        myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.QUEEN);
-                        moves.add(myChessMove);
-                        myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.ROOK);
-                        moves.add(myChessMove);
-                        myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.BISHOP);
-                        moves.add(myChessMove);
+                        promotionPieceFunc(nextPosition);
                     }
                     else {
                         ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
@@ -394,14 +303,7 @@ public class PieceMoves {
                 nextPosition = new ChessPosition(++row, ++col);
                 if ((board.getPiece(nextPosition) != null) && ((board.getPiece(currentPosition).getTeamColor() != board.getPiece(nextPosition).getTeamColor()))) {
                     if (currentPosition.getRow() == 1){
-                        ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.KNIGHT);
-                        moves.add(myChessMove);
-                        myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.QUEEN);
-                        moves.add(myChessMove);
-                        myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.ROOK);
-                        moves.add(myChessMove);
-                        myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.BISHOP);
-                        moves.add(myChessMove);
+                        promotionPieceFunc(nextPosition);
                     }
                     else {
                         ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
@@ -425,6 +327,30 @@ public class PieceMoves {
                     moves.add(myChessMove);
                 }
             }
+        }
+    }
+
+    // adds all the promotion piece option moves
+    public void promotionPieceFunc(ChessPosition nextPosition){
+        ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.KNIGHT);
+        moves.add(myChessMove);
+        myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.QUEEN);
+        moves.add(myChessMove);
+        myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.ROOK);
+        moves.add(myChessMove);
+        myChessMove = new ChessMove(currentPosition, nextPosition, ChessPiece.PieceType.BISHOP);
+        moves.add(myChessMove);
+    }
+
+    //adds a move for the knight function
+    public void addMovesFunc(ChessPosition nextPosition){
+        if ((board.getPiece(nextPosition) != null) && (board.getPiece(nextPosition).getTeamColor() != board.getPiece(currentPosition).getTeamColor())) {
+            ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
+            moves.add(myChessMove);
+        }
+        else if (board.getPiece(nextPosition) == null) {
+            ChessMove myChessMove = new ChessMove(currentPosition, nextPosition, null);
+            moves.add(myChessMove);
         }
     }
 
