@@ -95,6 +95,10 @@ public class ChessPiece {
             ArrayList<ChessMove> moves = pieceMoves.knightMoves();
             return moves;
         }
+        else if (this.type == PieceType.PAWN) {
+            ArrayList<ChessMove> moves = pieceMoves.pawnMoves();
+            return moves;
+        }
         return null;
     }
 }
