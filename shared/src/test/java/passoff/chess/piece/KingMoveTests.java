@@ -59,5 +59,28 @@ public class KingMoveTests {
                 new int[][]{}
         );
     }
+//
+//    @Test
+//    public void myOwnKingMove() {
+//        validateMoves("""
+//                        | | | | | | | | |
+//                        | | | | | | | | |
+//                        | | | | | | | | |
+//                        | | | | | | | | |
+//                        | | | | | | | | |
+//                        | | | | | | | | |
+//                        | | | | | | | | |
+//                        | |K| | | | | | |
+//                        """,
+//                new ChessPosition(1, 2),
+//                new int[][]{{1, 1}, {2, 1}, {2, 2}, {2, 3}, {1, 3}}
+//        );
+//    }
+
 
 }
+
+
+
+
+

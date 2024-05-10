@@ -17,6 +17,13 @@ public class ChessBoard {
     }
 
     @Override
+    public String toString() {
+        return "ChessBoard{" +
+                "board=" + Arrays.deepToString(board) +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -29,9 +36,6 @@ public class ChessBoard {
         return Arrays.deepHashCode(board);
     }
 
-    public ChessPiece[][] getBoard() {
-        return board;
-    }
 
     /**
      * Adds a chess piece to the chessboard
