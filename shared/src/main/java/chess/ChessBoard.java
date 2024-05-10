@@ -9,11 +9,29 @@ import java.util.Objects;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessBoard {
-    private final ChessPiece[][] board = new ChessPiece[8][8]; //make private!!!!!!!!
+public class ChessBoard implements Cloneable {
+    private ChessPiece[][] board = new ChessPiece[8][8]; //make private!!!!!!!!
 
     public ChessBoard() {
         
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        ChessBoard clone = (ChessBoard) super.clone();
+        ChessPiece[][] clonedBoard = new ChessPiece[8][8];
+        int row = 0;
+        int col = 0;
+        for (ChessPiece[] boardRow : board){
+            for (ChessPiece piece : boardRow){
+                ChessPiece clonedPiece = (ChessPiece) piece.clone();
+                clonedBoard[row][col] = clonedPiece;
+                ++row;                                                            //This might need to be changed in the piece function
+            }
+            ++col;
+        }
+        clone.board = clonedBoard;
+        return clone;
     }
 
     @Override
@@ -36,6 +54,9 @@ public class ChessBoard {
         return Arrays.deepHashCode(board);
     }
 
+//    public ChessPiece[][] getBoard(){
+//        return board;
+//    }
 
     /**
      * Adds a chess piece to the chessboard

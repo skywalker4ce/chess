@@ -50,8 +50,20 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+        if (gameboard.getPiece(startPosition) == null){
+            return null;
+        }
+
         ChessPiece piece = gameboard.getPiece(startPosition);
-        return piece.pieceMoves(gameboard, startPosition);
+        Collection<ChessMove> allMoves = piece.pieceMoves(gameboard, startPosition);
+
+        if (isInCheckmate(team)){
+
+        }
+        else if (isInCheck(team)){
+
+        }
+        return allMoves;
     }
 
     /**
@@ -81,6 +93,17 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
+//        int row = 1;
+//        int col = 1;
+//        for (ChessPiece[] boardRow : gameboard.getBoard()){
+//            for (ChessPiece piece : boardRow){
+//                if (piece != null && piece.getTeamColor() != teamColor){
+//                    Collection<ChessMove> moves = piece.pieceMoves(getBoard(), new ChessPosition(row, col));
+//                }
+//                ++col;
+//            }
+//            ++row;
+//        }
         return false;
     }
 
