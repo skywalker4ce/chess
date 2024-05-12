@@ -49,19 +49,28 @@ public class ChessGame {
      * @return Set of valid moves for requested piece, or null if no piece at
      * startPosition
      */
-    public Collection<ChessMove> validMoves(ChessPosition startPosition) throws CloneNotSupportedException {
+    public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         if (gameboard.getPiece(startPosition) == null){                         //This cloned error I'm throwing might not work
             return null;
         }
 
         ChessPiece piece = gameboard.getPiece(startPosition);
         Collection<ChessMove> allMoves = piece.pieceMoves(gameboard, startPosition);
-        ChessBoard clonedBoard = (ChessBoard) gameboard.clone();
+        // makes a clone of the board
+        ChessBoard clonedBoard;
+        try {
+            clonedBoard = (ChessBoard) gameboard.clone();
+        }
+        catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(gameboard);
+        System.out.println(clonedBoard);
         if (isInCheckmate(team)){
-
+            int i = 0;
         }
         else if (isInCheck(team)){
-
+            int i = 0;
         }
         return allMoves;
     }

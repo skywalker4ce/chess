@@ -21,14 +21,19 @@ public class ChessBoard implements Cloneable {
         ChessBoard clone = (ChessBoard) super.clone();
         ChessPiece[][] clonedBoard = new ChessPiece[8][8];
         int row = 0;
-        int col = 0;
         for (ChessPiece[] boardRow : board){
+            int col = 0;
             for (ChessPiece piece : boardRow){
+                if (piece == null){
+                    clonedBoard[row][col] = null;
+                    ++col;
+                    continue;
+                }
                 ChessPiece clonedPiece = (ChessPiece) piece.clone();
                 clonedBoard[row][col] = clonedPiece;
-                ++row;                                                            //This might need to be changed in the piece function
+                ++col;                                                            //This might need to be changed in the piece function
             }
-            ++col;
+            ++row;
         }
         clone.board = clonedBoard;
         return clone;
