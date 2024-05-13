@@ -11,6 +11,7 @@ import java.util.Collection;
  */
 public class ChessGame {
     private ChessBoard gameboard = new ChessBoard();
+    //private ChessBoard clonedBoard = gameboard.clone();
     private TeamColor team = TeamColor.BLACK;
     private Boolean firstMove = false;                                 // this may need to change from a private variable
 
@@ -58,15 +59,24 @@ public class ChessGame {
         ChessPiece piece = gameboard.getPiece(startPosition);
         Collection<ChessMove> allMoves = piece.pieceMoves(gameboard, startPosition);
         // makes a clone of the board
-        ChessBoard clonedBoard;
-        clonedBoard = gameboard.clone();
-        System.out.println(gameboard);
-        System.out.println(clonedBoard);
-        if (isInCheckmate(team)){
-            int i = 0;
-        }
-        else if (isInCheck(team)){
-            int i = 0;
+
+
+        if (!firstMove && isInCheck(team)){
+            for (ChessMove move : allMoves){
+                ChessBoard clonedBoard = gameboard.clone();
+                ChessBoard tempBoard = gameboard;
+                gameboard = clonedBoard;
+                try {
+                    firstMove = true;
+                    makeMove(move);
+                } catch (InvalidMoveException e) {
+                    throw new RuntimeException(e);
+                }
+                if (isInCheck(team)){
+                    allMoves.remove(move);
+                }
+                gameboard = tempBoard;
+            }
         }
         return allMoves;
     }
@@ -88,7 +98,7 @@ public class ChessGame {
         }
         else {
             throw new InvalidMoveException("That is an invalid move");
-        }                                                                       //This might not be the correct way to handle an error
+        }
     }
 
     /**
@@ -112,8 +122,6 @@ public class ChessGame {
             }
             ++row;
         }
-        System.out.println(teamColor);
-        System.out.println(kingPosition);
         // See if any of the moves gets to the king
         row = 1;
         for (ChessPiece[] boardRow : gameboard.getBoard()){
@@ -146,7 +154,21 @@ public class ChessGame {
             return false;
         }
         else {
-            return false;                                           // Change this
+            int row = 1;
+            for (ChessPiece[] boardRow : gameboard.getBoard()){
+                int col = 1;
+                for (ChessPiece piece : boardRow){
+                    if (piece != null && piece.getTeamColor() == teamColor){
+                        Collection<ChessMove> potentialMoves = validMoves(new ChessPosition(row, col));
+                        if (!potentialMoves.isEmpty()){
+                            return false;
+                        }
+                    }
+                    ++col;
+                }
+                ++row;
+            }
+            return true;
         }
     }
 
