@@ -65,9 +65,9 @@ public class ChessBoard implements Cloneable {
         return Arrays.deepHashCode(board);
     }
 
-//    public ChessPiece[][] getBoard(){
-//        return board;
-//    }
+    public ChessPiece[][] getBoard(){
+        return board;
+    }
 
     /**
      * Adds a chess piece to the chessboard
