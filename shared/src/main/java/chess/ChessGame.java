@@ -58,12 +58,7 @@ public class ChessGame {
         Collection<ChessMove> allMoves = piece.pieceMoves(gameboard, startPosition);
         // makes a clone of the board
         ChessBoard clonedBoard;
-        try {
-            clonedBoard = (ChessBoard) gameboard.clone();
-        }
-        catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
+        clonedBoard = gameboard.clone();
         System.out.println(gameboard);
         System.out.println(clonedBoard);
         if (isInCheckmate(team)){

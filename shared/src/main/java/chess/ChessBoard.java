@@ -17,25 +17,31 @@ public class ChessBoard implements Cloneable {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        ChessBoard clone = (ChessBoard) super.clone();
-        ChessPiece[][] clonedBoard = new ChessPiece[8][8];
-        int row = 0;
-        for (ChessPiece[] boardRow : board){
-            int col = 0;
-            for (ChessPiece piece : boardRow){
-                if (piece == null){
-                    clonedBoard[row][col] = null;
-                    ++col;
-                    continue;
+    public ChessBoard clone() {
+        ChessBoard clone;
+        try {
+            clone = (ChessBoard) super.clone();
+            ChessPiece[][] clonedBoard = new ChessPiece[8][8];
+            int row = 0;
+            for (ChessPiece[] boardRow : board){
+                int col = 0;
+                for (ChessPiece piece : boardRow){
+                    if (piece == null){
+                        clonedBoard[row][col] = null;
+                        ++col;
+                        continue;
+                    }
+                    ChessPiece clonedPiece = (ChessPiece) piece.clone();
+                    clonedBoard[row][col] = clonedPiece;
+                    ++col;                                                            //This might need to be changed in the piece function
                 }
-                ChessPiece clonedPiece = (ChessPiece) piece.clone();
-                clonedBoard[row][col] = clonedPiece;
-                ++col;                                                            //This might need to be changed in the piece function
+                ++row;
             }
-            ++row;
+            clone.board = clonedBoard;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
         }
-        clone.board = clonedBoard;
+
         return clone;
     }
 
