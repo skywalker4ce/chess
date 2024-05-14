@@ -88,9 +88,15 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPosition initialPosition = move.getStartPosition();
         Collection<ChessMove> potentialMoves = validMoves(initialPosition);
-        if (potentialMoves.contains(move)){
+        if (potentialMoves != null && potentialMoves.contains(move) && gameboard.getPiece(initialPosition).getTeamColor() == team){
             //Update the chessboard to reflect this move
-            gameboard.addPiece(move.getEndPosition(), gameboard.getPiece(initialPosition));
+            if (move.getPromotionPiece() != null){
+                ChessPiece.PieceType promotion = move.getPromotionPiece();
+                gameboard.addPiece(move.getEndPosition(), new ChessPiece(team, promotion));
+            }
+            else {
+                gameboard.addPiece(move.getEndPosition(), gameboard.getPiece(initialPosition));
+            }
             gameboard.addPiece(initialPosition, null);
             if (team == TeamColor.WHITE){
                 setTeamTurn(TeamColor.BLACK);
@@ -112,7 +118,6 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        // (if a piece of the opposing team can get to the king)
         // find where current team's king is at
         ChessPosition kingPosition = new ChessPosition(1,1);
         int row = 1;
@@ -153,7 +158,6 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        //if Valid moves is 0 and other team can reach the king
         if (!isInCheck(teamColor)) {
             return false;
         }
