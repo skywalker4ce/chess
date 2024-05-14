@@ -13,7 +13,7 @@ public class ChessGame {
     private ChessBoard gameboard = new ChessBoard();
     //private ChessBoard clonedBoard = gameboard.clone();
     private TeamColor team = TeamColor.BLACK;
-    private Boolean firstMove = false;                                 // this may need to change from a private variable
+    private Boolean makeMoveBoolean = false;                                 // this may need to change from a private variable
 
     public ChessGame() {
         setBoard(this.gameboard);
@@ -61,22 +61,23 @@ public class ChessGame {
         // makes a clone of the board
 
 
-        if (!firstMove && isInCheck(team)){
+        if (!makeMoveBoolean && isInCheck(team)){
+            ArrayList<ChessMove> updatedMoves = new ArrayList<>();
             for (ChessMove move : allMoves){
                 ChessBoard clonedBoard = gameboard.clone();
-                ChessBoard tempBoard = gameboard;
-                gameboard = clonedBoard;
                 try {
-                    firstMove = true;
+                    makeMoveBoolean = true;
                     makeMove(move);
                 } catch (InvalidMoveException e) {
                     throw new RuntimeException(e);
                 }
-                if (isInCheck(team)){
-                    allMoves.remove(move);
+                if (!isInCheck(team)){
+                    updatedMoves.add(move);
                 }
-                gameboard = tempBoard;
+                gameboard = clonedBoard.clone();
             }
+            allMoves = updatedMoves;
+            makeMoveBoolean = false;
         }
         return allMoves;
     }
