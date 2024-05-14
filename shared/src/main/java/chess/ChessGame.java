@@ -16,6 +16,7 @@ public class ChessGame {
     private Boolean makeMoveBoolean = false;                                 // this may need to change from a private variable
 
     public ChessGame() {
+        gameboard.resetBoard();
         setBoard(this.gameboard);
     }
 
@@ -157,23 +158,28 @@ public class ChessGame {
             return false;
         }
         else {
-            int row = 1;
-            for (ChessPiece[] boardRow : gameboard.getBoard()){
-                int col = 1;
-                for (ChessPiece piece : boardRow){
-                    if (piece != null && piece.getTeamColor() == teamColor){
-                        Collection<ChessMove> potentialMoves = validMoves(new ChessPosition(row, col));
-                        if (!potentialMoves.isEmpty()){
-                            return false;
-                        }
-                    }
-                    ++col;
-                }
-                ++row;
-            }
-            return true;
+            return checkForValidMoves(teamColor);
         }
     }
+
+    private boolean checkForValidMoves(TeamColor teamColor){
+        int row = 1;
+        for (ChessPiece[] boardRow : gameboard.getBoard()){
+            int col = 1;
+            for (ChessPiece piece : boardRow){
+                if (piece != null && piece.getTeamColor() == teamColor){
+                    Collection<ChessMove> potentialMoves = validMoves(new ChessPosition(row, col));
+                    if (potentialMoves != null && !potentialMoves.isEmpty()){
+                        return false;
+                    }
+                }
+                ++col;
+            }
+            ++row;
+        }
+        return true;
+    }
+
 
     /**
      * Determines if the given team is in stalemate, which here is defined as having
@@ -183,7 +189,7 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        return false;
+        return checkForValidMoves(teamColor);
     }
 
     /**
