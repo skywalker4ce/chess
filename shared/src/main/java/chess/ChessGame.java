@@ -61,24 +61,20 @@ public class ChessGame {
         // makes a clone of the board
 
 
-        if (!makeMoveBoolean){ //&& isInCheck(team)){
-            ArrayList<ChessMove> updatedMoves = new ArrayList<>();
-            for (ChessMove move : allMoves){
-                ChessBoard clonedBoard = gameboard.clone();
-                try {
-                    makeMoveBoolean = true;
-                    makeMove(move);
-                } catch (InvalidMoveException e) {
-                    throw new RuntimeException(e);
-                }
-                if (!isInCheck(team)){
-                    updatedMoves.add(move);
-                }
-                gameboard = clonedBoard.clone();
+
+        ArrayList<ChessMove> updatedMoves = new ArrayList<>();
+        for (ChessMove move : allMoves){
+            ChessBoard clonedBoard = gameboard.clone();
+            makeMoveBoolean = true;
+            gameboard.addPiece(move.getEndPosition(), gameboard.getPiece(startPosition));
+            gameboard.addPiece(startPosition, null);
+            if (!isInCheck(piece.getTeamColor())){
+                updatedMoves.add(move);
             }
-            allMoves = updatedMoves;
-            makeMoveBoolean = false;
+            gameboard = clonedBoard.clone();
         }
+        allMoves = updatedMoves;
+        makeMoveBoolean = false;
         return allMoves;
     }
 
@@ -95,6 +91,12 @@ public class ChessGame {
             //Update the chessboard to reflect this move
             gameboard.addPiece(move.getEndPosition(), gameboard.getPiece(initialPosition));
             gameboard.addPiece(initialPosition, null);
+            if (team == TeamColor.WHITE){
+                setTeamTurn(TeamColor.BLACK);
+            }
+            else {
+                setTeamTurn(TeamColor.WHITE);
+            }
 
         }
         else {
