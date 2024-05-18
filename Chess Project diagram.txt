@@ -30,8 +30,10 @@ Server->Handler:{ "username":"", "password":"" }
 Handler->Service:login(LoginRequest)
 Service->DataAccess:getUser(username)
 DataAccess->db:SELECT username from user
+Service<--DataAccess:username
 Service->DataAccess:getPassword(password)
 DataAccess->db:SELECT password from user
+Service<--DataAccess:password
 Service->DataAccess:createAuth(username)
 DataAccess->db:INSERT username, authToken INTO auth
 Service<--DataAccess:authToken
@@ -45,7 +47,8 @@ Server->Handler:authToken
 Handler->Service:logout(LogoutRequest)
 Service->DataAccess:getAuth(authToken)
 DataAccess->db:SELECT authToken FROM auth
-Service->DataAccess:deleteAuth(authToken
+Service<--DataAccess:authToken
+Service->DataAccess:deleteAuth(authToken)
 DataAccess->db:DELETE authToken and paired username from auth
 Service<--DataAccess:
 Handler<--Service:
@@ -59,7 +62,10 @@ Server->Handler:authToken
 Handler->Service:listGames(ListGamesRequest)
 Service->DataAccess:getAuth(authToken)
 DataAccess->db:SELECT authToken FROM auth
-Service<-DataAccess:gameList
+Service<--DataAccess:authToken
+Service->DataAccess:getGameList()
+DataAccess->db:SELECT games FROM game
+Service<--DataAccess:gameList
 Handler<--Service:ListGamesResult
 Server<--Handler:{ "games": [{"gameID": 1234, "whiteUsername":"", "blackUsername":"", "gameName:""} ]}
 Client<--Server:[200] { "games": [{"gameID": 1234, "whiteUsername":"", "blackUsername":"", "gameName:""} ]}
@@ -71,6 +77,7 @@ Server->Handler:authToken\n{ "gameName":"" }
 Handler->Service:createGame(CreateGameRequest)
 Service->DataAccess:getAuth(authToken)
 DataAccess->db:SELECT authToken from auth
+Service<--DataAccess:authToken
 Service->DataAccess:createGame(gameName)
 DataAccess->db:INSERT gameName INTO game
 Service<--DataAccess:gameID
@@ -85,10 +92,15 @@ Server->Handler:{ "playerColor":"WHITE/BLACK", "gameID": 1234 }
 Handler->Service:joinGame(JoinGameRequest)
 Service->DataAccess:getAuth(authToken)
 DataAccess->db:SELECT authToken FROM auth
+Service<--DataAccess:authToken
+Service->DataAccess:getUsername(authToken)
+DataAccess->db:SELECT username FROM auth
+Service<-DataAccess:username
 Service->DataAccess:getGame(gameID)
 DataAccess->db:SELECT gameID FROM game
-Service->DataAccess:updateGame(playerColor)
-DataAccess->db:INSERT playerColor INTO game
+Service<--DataAccess:game
+Service->DataAccess:updateGame(game, username, playerColor)
+DataAccess->db:INSERT username INTO game AS whitePlayer or blackPlayer
 Service<--DataAccess:
 Handler<--Service:
 Server<--Handler:
@@ -99,8 +111,12 @@ group #gray Clear application #white
 Client -> Server: [DELETE] /db
 Server->Handler:
 Handler->Service:delete(DeleteRequest)
-Service->DataAccess:deleteDatabase()
-DataAccess->db:DELETE all data in database
+Service->DataAccess:deleteGameData()
+DataAccess->db:DELETE game data table
+Service->DataAccess:deleteAuthData()
+DataAccess->db:DELETE auth data table
+Service->DataAccess:deleteUserData()
+DataAccess->db:DELETE user data table
 Service<--DataAccess:
 Handler<--Service:
 Server<--Handler:
