@@ -10,6 +10,7 @@ public class Server {
         Spark.staticFiles.location("web");
 
         // Register your endpoints and handle exceptions here.
+        createRoutes();
 
         Spark.awaitInitialization();
         return Spark.port();
@@ -18,5 +19,9 @@ public class Server {
     public void stop() {
         Spark.stop();
         Spark.awaitStop();
+    }
+
+    private static void createRoutes() {
+        Spark.get("/hello", (req, res) -> "Hello BYU!");
     }
 }

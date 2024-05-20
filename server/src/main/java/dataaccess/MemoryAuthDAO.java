@@ -4,10 +4,11 @@ import model.AuthData;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.UUID;
 
 public class MemoryAuthDAO implements AuthDAO{
     private final ArrayList<AuthData> authDataSet = new ArrayList<>();
-    private String genAuthToken = "ChangeThisAuthToken";
+    private String genAuthToken = UUID.randomUUID().toString();
 
     public MemoryAuthDAO(){}
 
@@ -36,17 +37,15 @@ public class MemoryAuthDAO implements AuthDAO{
     public void clear(){
         if (!authDataSet.isEmpty()){
             authDataSet.clear();
-            System.out.println(authDataSet);
         }
     }
 
     @Override
-    public String createAuth(String username){
+    public AuthData createAuth(String username){
         //this should generate a better authToken later on
         AuthData newAuth = new AuthData(genAuthToken, username);
         authDataSet.add(newAuth);
-        System.out.println(authDataSet);
-        return genAuthToken;
+        return newAuth;
     }
 
     @Override

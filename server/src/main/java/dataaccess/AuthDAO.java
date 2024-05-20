@@ -7,7 +7,7 @@ public interface AuthDAO {
     void clear();
 
     //creates an auth object
-    String createAuth(String username);
+    AuthData createAuth(String username);
 
     //gets an auth object
     AuthData getAuth(String authToken);
