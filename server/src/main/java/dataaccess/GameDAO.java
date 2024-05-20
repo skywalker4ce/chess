@@ -9,7 +9,7 @@ public interface GameDAO {
     void clear();
 
     //creates a game object
-    void createGame(String gameName);
+    int createGame(String gameName);
 
     //gets a game object
     GameData getGame(int gameID);

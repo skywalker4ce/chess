@@ -41,10 +41,11 @@ public class MemoryGameDAO implements GameDAO {
     }
 
     @Override
-    public void createGame(String gameName){
+    public int createGame(String gameName){
         genGameID++;
-        GameData myGame = new GameData(genGameID, "White = null", "Black = null", gameName, new ChessGame());
+        GameData myGame = new GameData(genGameID, "null", "null", gameName, new ChessGame());
         gameDataArrayList.add(myGame);
+        return genGameID;
     }
 
     @Override

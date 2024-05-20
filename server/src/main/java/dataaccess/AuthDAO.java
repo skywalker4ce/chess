@@ -7,11 +7,11 @@ public interface AuthDAO {
     void clear();
 
     //creates an auth object
-    void createAuth();
+    String createAuth(String username);
 
     //gets an auth object
-    AuthData getAuth();
+    AuthData getAuth(String authToken);
 
     //deletes an auth object
-    void deleteAuth();
+    void deleteAuth(String authToken);
 }

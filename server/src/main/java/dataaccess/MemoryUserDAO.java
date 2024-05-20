@@ -35,6 +35,7 @@ public class MemoryUserDAO implements UserDAO{
     public void clear(){
         if (!userDataSet.isEmpty()){
             userDataSet.clear();
+
         }
     }
 
