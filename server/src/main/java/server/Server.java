@@ -22,6 +22,12 @@ public class Server {
     }
 
     private static void createRoutes() {
-        Spark.get("/hello", (req, res) -> "Hello BYU!");
+
+
+        Spark.post("/user", (req, res) -> {
+            Handler myHandler = new Handler();
+            myHandler.registerHandler(req);
+            return "Hello";
+        });
     }
 }
