@@ -1,8 +1,15 @@
 package server;
 
+import dataaccess.MemoryAuthDAO;
+import dataaccess.MemoryGameDAO;
+import dataaccess.MemoryUserDAO;
 import spark.*;
 
 public class Server {
+    private static MemoryGameDAO myGameMemory = new MemoryGameDAO();
+    private static MemoryAuthDAO myAuthMemory = new MemoryAuthDAO();
+    private static MemoryUserDAO myUserMemory = new MemoryUserDAO();
+
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
@@ -26,8 +33,10 @@ public class Server {
 
         Spark.post("/user", (req, res) -> {
             Handler myHandler = new Handler();
-            myHandler.registerHandler(req);
-            return "Hello";
+            res.status(200);
+            return myHandler.registerHandler(req);
         });
+
+
     }
 }

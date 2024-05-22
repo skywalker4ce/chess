@@ -8,8 +8,13 @@ import model.UserData;
 import java.util.Objects;
 
 public class UserService {
-    MemoryUserDAO myUser = new MemoryUserDAO();
-    MemoryAuthDAO myAuth = new MemoryAuthDAO();
+    MemoryUserDAO myUser;
+    MemoryAuthDAO myAuth;
+
+    public UserService(MemoryUserDAO myUser, MemoryAuthDAO myAuth){
+        this.myUser = myUser;
+        this.myAuth = myAuth;
+    }
 
     public AuthData register(UserData user) {
         if (myUser.getUser(user.username()) == null){
