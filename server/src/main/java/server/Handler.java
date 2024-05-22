@@ -1,16 +1,17 @@
 package server;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
 import model.AuthData;
 import model.UserData;
-import request.RegisterRequest;
+import org.eclipse.jetty.server.Authentication;
+import request.LoginRequest;
+import service.ClearService;
+import service.GameService;
 import service.UserService;
 import spark.Request;
-import spark.Response;
 
 public class Handler {
     private static MemoryGameDAO myGameMemory = new MemoryGameDAO();
@@ -28,9 +29,40 @@ public class Handler {
 
         AuthData myAuthObject = myUserService.register(objFromJson);
 
-        var objToJson = serializer.toJson(myAuthObject);
-        System.out.println(objFromJson);
-        System.out.println(objToJson);
-        return objToJson;
+        return serializer.toJson(myAuthObject);
+    }
+
+    public String loginHandler(Request req){
+        var serializer = new Gson();
+        UserService myUserService = new UserService(myUserMemory, myAuthMemory);
+        var objFromJson = serializer.fromJson(req.body(), LoginRequest.class);
+        UserData tempUser = new UserData(objFromJson.username(), objFromJson.password(), "");
+        AuthData myAuthObject = myUserService.login(tempUser);
+        return serializer.toJson(myAuthObject);
+    }
+
+    public String logoutHandler(Request req){
+        var serializer = new Gson();
+        UserService myUserService = new UserService(myUserMemory, myAuthMemory);
+        return ""; // change this
+    }
+
+    public String listGamesHandler(Request req){
+        var serializer = new Gson();
+        GameService myGameService = new GameService(myAuthMemory, myGameMemory);
+        myGameService.listGames(req.headers().toString());
+    }
+
+    public String createGamesHandler(Request req){
+
+    }
+
+    public String joinGameHandler(Request req){
+
+    }
+
+    public void clearApplicationHandler(){
+        ClearService myClearService = new ClearService(myUserMemory, myAuthMemory, myGameMemory);
+        myClearService.clearApplication();
     }
 }

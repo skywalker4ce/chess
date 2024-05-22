@@ -11,6 +11,11 @@ public class GameService {
     MemoryAuthDAO myAuth = new MemoryAuthDAO();
     MemoryGameDAO myGame = new MemoryGameDAO();
 
+    public GameService(MemoryAuthDAO myAuth, MemoryGameDAO myGame){
+        this.myAuth = myAuth;
+        this.myGame = myGame;
+    }
+
     public ArrayList<GameData> listGames(String authToken){
         if (myAuth.getAuth(authToken) != null){
             return myGame.listGames();

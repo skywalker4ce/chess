@@ -29,14 +29,21 @@ public class Server {
     }
 
     private static void createRoutes() {
-
+        Handler myHandler = new Handler();
 
         Spark.post("/user", (req, res) -> {
-            Handler myHandler = new Handler();
             res.status(200);
             return myHandler.registerHandler(req);
         });
 
+        Spark.post("/session", (req, res) -> {
+            res.status(200);
+            return myHandler.loginHandler(req);
+        });
 
+        Spark.delete("/session", (req, res) -> {
+            res.status(200);
+            return myHandler.logoutHandler(req);
+        });
     }
 }
