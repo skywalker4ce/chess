@@ -5,13 +5,18 @@ import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
 import model.AuthData;
+import model.GameData;
 import model.UserData;
-import org.eclipse.jetty.server.Authentication;
+import request.JoinGameRequest;
 import request.LoginRequest;
+import result.CreateGameResult;
+import result.ListGamesResult;
 import service.ClearService;
 import service.GameService;
 import service.UserService;
 import spark.Request;
+
+import java.util.ArrayList;
 
 public class Handler {
     private static MemoryGameDAO myGameMemory = new MemoryGameDAO();
@@ -23,12 +28,9 @@ public class Handler {
     public String registerHandler(Request req){
         var serializer = new Gson();
         UserService myUserService = new UserService(myUserMemory, myAuthMemory);
-
         //takes the object and turns it into a RegisterRequest class
         var objFromJson = serializer.fromJson(req.body(), UserData.class);
-
         AuthData myAuthObject = myUserService.register(objFromJson);
-
         return serializer.toJson(myAuthObject);
     }
 
@@ -44,21 +46,43 @@ public class Handler {
     public String logoutHandler(Request req){
         var serializer = new Gson();
         UserService myUserService = new UserService(myUserMemory, myAuthMemory);
+        for (var authToken : req.headers()){
+            myUserService.logout(authToken);
+            break;
+        }
         return ""; // change this
     }
 
     public String listGamesHandler(Request req){
         var serializer = new Gson();
         GameService myGameService = new GameService(myAuthMemory, myGameMemory);
-        myGameService.listGames(req.headers().toString());
+        ArrayList<GameData> myGameList = myGameService.listGames(req.headers().toString());
+        var myListGameResult = new ListGamesResult(myGameList);
+        return serializer.toJson(myListGameResult);
     }
 
     public String createGamesHandler(Request req){
+        var serializer = new Gson();
+        GameService myGameService = new GameService(myAuthMemory, myGameMemory);
+        int tempGameID = 0;
+        for (var authToken : req.headers()){
+            tempGameID = myGameService.createGame(authToken, req.body());
+            break;
+        }
+        var myCreateGameResult = new CreateGameResult(tempGameID);
+        return serializer.toJson(myCreateGameResult);
 
     }
 
     public String joinGameHandler(Request req){
-
+        var serializer = new Gson();
+        GameService myGameService = new GameService(myAuthMemory, myGameMemory);
+        var objFromJson = serializer.fromJson(req.body(), JoinGameRequest.class);
+        for (var authToken : req.headers()){
+            myGameService.joinGame(authToken, objFromJson.playerColor(), objFromJson.gameID());
+            break;
+        }
+        return ""; //change this
     }
 
     public void clearApplicationHandler(){

@@ -32,9 +32,9 @@ public class UserService {
         else
             return null; // this will also need to be changed
     }
-    public void logout(AuthData auth) {
-        if (myAuth.getAuth(auth.authToken()) != null){
-            myAuth.deleteAuth(auth.authToken());
+    public void logout(String authToken) {
+        if (myAuth.getAuth(authToken) != null){
+            myAuth.deleteAuth(authToken);
         }
     }
 }

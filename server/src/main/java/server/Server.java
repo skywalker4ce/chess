@@ -45,5 +45,26 @@ public class Server {
             res.status(200);
             return myHandler.logoutHandler(req);
         });
+
+        Spark.get("/game", (req, res) -> {
+            res.status(200);
+            return myHandler.listGamesHandler(req);
+        });
+
+        Spark.post("/game", (req, res) -> {
+            res.status(200);
+            return myHandler.createGamesHandler(req);
+        });
+
+        Spark.put("/game", (req, res) -> {
+            res.status(200);
+            return myHandler.joinGameHandler(req);
+        });
+
+        Spark.delete("/db", (req, res) -> {
+            res.status(200);
+            myHandler.clearApplicationHandler();
+            return "";
+        });
     }
 }
