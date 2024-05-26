@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 
-public class MemoryUserDAO implements UserDAO{
+public class MemoryUserDAO implements UserDAO {
     private final ArrayList<UserData> userDataSet = new ArrayList<>();
 
     public MemoryUserDAO(){}
@@ -46,7 +46,7 @@ public class MemoryUserDAO implements UserDAO{
     }
 
     @Override
-    public UserData getUser(String username){
+    public UserData getUser(String username) {
         for (UserData user : userDataSet){
             if (Objects.equals(user.username(), username)){
                 return user;

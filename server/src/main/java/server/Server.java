@@ -1,5 +1,6 @@
 package server;
 
+import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
@@ -32,13 +33,29 @@ public class Server {
         Handler myHandler = new Handler();
 
         Spark.post("/user", (req, res) -> {
-            res.status(200);
-            return myHandler.registerHandler(req);
+            try {
+                res.status(200);
+                return myHandler.registerHandler(req);
+            }
+            catch(DataAccessException e){
+                res.status(403);
+                return e.getMessage();
+            }
+            catch(BadRequestException e){
+                res.status(400);
+                return e.getMessage();
+            }
         });
 
         Spark.post("/session", (req, res) -> {
-            res.status(200);
-            return myHandler.loginHandler(req);
+            try {
+                res.status(200);
+                return myHandler.loginHandler(req);
+            }
+            catch(DataAccessException e){
+                res.status(403);
+                return e.getMessage();
+            }
         });
 
         Spark.delete("/session", (req, res) -> {

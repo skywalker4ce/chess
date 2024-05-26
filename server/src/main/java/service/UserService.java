@@ -1,10 +1,12 @@
 package service;
 
+import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
 import model.AuthData;
 import model.UserData;
 
+import javax.xml.crypto.Data;
 import java.util.Objects;
 
 public class UserService {
@@ -16,21 +18,20 @@ public class UserService {
         this.myAuth = myAuth;
     }
 
-    public AuthData register(UserData user) {
-        if (myUser.getUser(user.username()) == null){
+    public AuthData register(UserData user) throws DataAccessException{
+        if (myUser.getUser(user.username()) == null) {
             myUser.createUser(user.username(), user.password(), user.email());
             return login(user);
         }
-        else
-            return null; //this will need to be changed with error handling
+        throw new DataAccessException("{ \"message\": \"Error: already taken\" }");
     }
-    public AuthData login(UserData user) {
+
+    public AuthData login(UserData user) throws DataAccessException {
         UserData tempUser = myUser.getUser(user.username());
-        if (tempUser.username() != null && Objects.equals(tempUser.password(), user.password())){
+        if (tempUser.username() != null && Objects.equals(tempUser.password(), user.password())) {
             return myAuth.createAuth(user.username());
         }
-        else
-            return null; // this will also need to be changed
+        return null;
     }
     public void logout(String authToken) {
         if (myAuth.getAuth(authToken) != null){

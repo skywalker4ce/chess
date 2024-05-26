@@ -10,5 +10,5 @@ public interface UserDAO {
     void createUser(String username, String password, String email);
 
     //gets a user object
-    UserData getUser(String username);
+    UserData getUser(String username) throws DataAccessException;
 }
