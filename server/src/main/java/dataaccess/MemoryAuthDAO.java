@@ -43,7 +43,7 @@ public class MemoryAuthDAO implements AuthDAO{
     @Override
     public AuthData createAuth(String username){
         //this should generate a better authToken later on
-        //genAuthToken = UUID.randomUUID().toString();
+        genAuthToken = UUID.randomUUID().toString();
         AuthData newAuth = new AuthData(genAuthToken, username);
         authDataSet.add(newAuth);
         return newAuth;
@@ -64,6 +64,7 @@ public class MemoryAuthDAO implements AuthDAO{
         for (AuthData auth : authDataSet){
             if (Objects.equals(auth.authToken(), authToken)){
                 authDataSet.remove(auth);
+                break;
             }
         }
     }

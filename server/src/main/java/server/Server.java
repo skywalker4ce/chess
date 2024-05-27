@@ -4,6 +4,7 @@ import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
+import service.UnauthorizedException;
 import spark.*;
 
 public class Server {
@@ -56,11 +57,21 @@ public class Server {
                 res.status(403);
                 return e.getMessage();
             }
+            catch(UnauthorizedException e){
+                res.status(401);
+                return e.getMessage();
+            }
         });
 
         Spark.delete("/session", (req, res) -> {
-            res.status(200);
-            return myHandler.logoutHandler(req);
+            try {
+                res.status(200);
+                return myHandler.logoutHandler(req);
+            }
+            catch(UnauthorizedException e){
+                res.status(401);
+                return e.getMessage();
+            }
         });
 
         Spark.get("/game", (req, res) -> {
@@ -69,13 +80,33 @@ public class Server {
         });
 
         Spark.post("/game", (req, res) -> {
-            res.status(200);
-            return myHandler.createGamesHandler(req);
+            try {
+                res.status(200);
+                return myHandler.createGamesHandler(req);
+            }
+            catch (UnauthorizedException e){
+                res.status(401);
+                return e.getMessage();
+            }
         });
 
         Spark.put("/game", (req, res) -> {
-            res.status(200);
-            return myHandler.joinGameHandler(req);
+            try {
+                res.status(200);
+                return myHandler.joinGameHandler(req);
+            }
+            catch (BadRequestException e){
+                res.status(400);
+                return e.getMessage();
+            }
+            catch (UnauthorizedException e){
+                res.status(401);
+                return e.getMessage();
+            }
+            catch (DataAccessException e){
+                res.status(403);
+                return e.getMessage();
+            }
         });
 
         Spark.delete("/db", (req, res) -> {

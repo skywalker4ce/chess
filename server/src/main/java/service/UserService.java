@@ -18,7 +18,7 @@ public class UserService {
         this.myAuth = myAuth;
     }
 
-    public AuthData register(UserData user) throws DataAccessException{
+    public AuthData register(UserData user) throws DataAccessException, UnauthorizedException{
         if (myUser.getUser(user.username()) == null) {
             myUser.createUser(user.username(), user.password(), user.email());
             return login(user);
@@ -26,16 +26,20 @@ public class UserService {
         throw new DataAccessException("{ \"message\": \"Error: already taken\" }");
     }
 
-    public AuthData login(UserData user) throws DataAccessException {
+    public AuthData login(UserData user) throws DataAccessException, UnauthorizedException {
         UserData tempUser = myUser.getUser(user.username());
-        if (tempUser.username() != null && Objects.equals(tempUser.password(), user.password())) {
+        if (tempUser != null && tempUser.username() != null && Objects.equals(tempUser.password(), user.password())) {
             return myAuth.createAuth(user.username());
         }
-        return null;
+        throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
     }
-    public void logout(String authToken) {
+
+    public void logout(String authToken) throws UnauthorizedException{
         if (myAuth.getAuth(authToken) != null){
             myAuth.deleteAuth(authToken);
+        }
+        else {
+            throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
         }
     }
 }

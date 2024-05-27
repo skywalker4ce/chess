@@ -14,6 +14,7 @@ import result.CreateGameResult;
 import result.ListGamesResult;
 import service.ClearService;
 import service.GameService;
+import service.UnauthorizedException;
 import service.UserService;
 import spark.Request;
 
@@ -30,7 +31,7 @@ public class Handler {
         }
     }
 
-    public String registerHandler(Request req) throws DataAccessException, BadRequestException {
+    public String registerHandler(Request req) throws DataAccessException, BadRequestException, UnauthorizedException {
         try {
             var serializer = new Gson();
             UserService myUserService = new UserService(myUserMemory, myAuthMemory);
@@ -46,9 +47,12 @@ public class Handler {
         catch (BadRequestException e){
             throw new BadRequestException(e.getMessage());
         }
+        catch (UnauthorizedException e){
+            throw new UnauthorizedException(e.getMessage());
+        }
     }
 
-    public String loginHandler(Request req) throws DataAccessException {
+    public String loginHandler(Request req) throws DataAccessException, UnauthorizedException {
         try {
             var serializer = new Gson();
             UserService myUserService = new UserService(myUserMemory, myAuthMemory);
@@ -60,16 +64,21 @@ public class Handler {
         catch (DataAccessException e){
             throw new DataAccessException(e.getMessage());
         }
+        catch (UnauthorizedException e){
+            throw new UnauthorizedException(e.getMessage());
+        }
     }
 
-    public String logoutHandler(Request req){
-        var serializer = new Gson();
-        UserService myUserService = new UserService(myUserMemory, myAuthMemory);
-        for (var authToken : req.headers()){
+    public String logoutHandler(Request req) throws UnauthorizedException{
+        try {
+            UserService myUserService = new UserService(myUserMemory, myAuthMemory);
+            var authToken = req.headers("Authorization");
             myUserService.logout(authToken);
-            break;
+            return "";
         }
-        return ""; // change this
+        catch (UnauthorizedException e){
+            throw new UnauthorizedException(e.getMessage());
+        }
     }
 
     public String listGamesHandler(Request req){
@@ -80,28 +89,40 @@ public class Handler {
         return serializer.toJson(myListGameResult);
     }
 
-    public String createGamesHandler(Request req){
-        var serializer = new Gson();
-        GameService myGameService = new GameService(myAuthMemory, myGameMemory);
-        int tempGameID = 0;
-        for (var authToken : req.headers()){
+    public String createGamesHandler(Request req) throws UnauthorizedException{
+        try {
+            var serializer = new Gson();
+            GameService myGameService = new GameService(myAuthMemory, myGameMemory);
+            int tempGameID = 0;
+            var authToken = req.headers("Authorization");
             tempGameID = myGameService.createGame(authToken, req.body());
-            break;
+            var myCreateGameResult = new CreateGameResult(tempGameID);
+            return serializer.toJson(myCreateGameResult);
         }
-        var myCreateGameResult = new CreateGameResult(tempGameID);
-        return serializer.toJson(myCreateGameResult);
+        catch (UnauthorizedException e){
+            throw new UnauthorizedException(e.getMessage());
+        }
 
     }
 
-    public String joinGameHandler(Request req){
-        var serializer = new Gson();
-        GameService myGameService = new GameService(myAuthMemory, myGameMemory);
-        var objFromJson = serializer.fromJson(req.body(), JoinGameRequest.class);
-        for (var authToken : req.headers()){
+    public String joinGameHandler(Request req) throws UnauthorizedException, BadRequestException, DataAccessException{
+        try {
+            var serializer = new Gson();
+            GameService myGameService = new GameService(myAuthMemory, myGameMemory);
+            var objFromJson = serializer.fromJson(req.body(), JoinGameRequest.class);
+            var authToken = req.headers("Authorization");
             myGameService.joinGame(authToken, objFromJson.playerColor(), objFromJson.gameID());
-            break;
+            return "";
         }
-        return ""; //change this
+        catch (UnauthorizedException e){
+            throw new UnauthorizedException(e.getMessage());
+        }
+        catch (BadRequestException e){
+            throw new BadRequestException(e.getMessage());
+        }
+        catch (DataAccessException e){
+            throw new DataAccessException(e.getMessage());
+        }
     }
 
     public void clearApplicationHandler(){
