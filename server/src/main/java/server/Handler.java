@@ -8,6 +8,7 @@ import dataaccess.MemoryUserDAO;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
+import request.CreateGameRequest;
 import request.JoinGameRequest;
 import request.LoginRequest;
 import result.CreateGameResult;
@@ -81,12 +82,17 @@ public class Handler {
         }
     }
 
-    public String listGamesHandler(Request req){
-        var serializer = new Gson();
-        GameService myGameService = new GameService(myAuthMemory, myGameMemory);
-        ArrayList<GameData> myGameList = myGameService.listGames(req.headers().toString());
-        var myListGameResult = new ListGamesResult(myGameList);
-        return serializer.toJson(myListGameResult);
+    public String listGamesHandler(Request req) throws UnauthorizedException{
+        try {
+            var serializer = new Gson();
+            GameService myGameService = new GameService(myAuthMemory, myGameMemory);
+            ArrayList<GameData> myGameList = myGameService.listGames(req.headers("Authorization"));
+            var myListGameResult = new ListGamesResult(myGameList);
+            return serializer.toJson(myListGameResult);
+        }
+        catch (UnauthorizedException e){
+            throw new UnauthorizedException(e.getMessage());
+        }
     }
 
     public String createGamesHandler(Request req) throws UnauthorizedException{
@@ -94,8 +100,9 @@ public class Handler {
             var serializer = new Gson();
             GameService myGameService = new GameService(myAuthMemory, myGameMemory);
             int tempGameID = 0;
+            var tempGameName = serializer.fromJson(req.body(), CreateGameRequest.class);
             var authToken = req.headers("Authorization");
-            tempGameID = myGameService.createGame(authToken, req.body());
+            tempGameID = myGameService.createGame(authToken, tempGameName.gameName());
             var myCreateGameResult = new CreateGameResult(tempGameID);
             return serializer.toJson(myCreateGameResult);
         }

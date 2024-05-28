@@ -8,6 +8,7 @@ import model.GameData;
 import server.BadRequestException;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class GameService {
     MemoryAuthDAO myAuth = new MemoryAuthDAO();
@@ -18,12 +19,11 @@ public class GameService {
         this.myGame = myGame;
     }
 
-    public ArrayList<GameData> listGames(String authToken){
+    public ArrayList<GameData> listGames(String authToken) throws UnauthorizedException{
         if (myAuth.getAuth(authToken) != null){
             return myGame.listGames();
         }
-        else
-            return null; // CHANGE!!!
+        throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
     }
 
     public int createGame(String authToken, String gameName) throws UnauthorizedException{
@@ -42,7 +42,7 @@ public class GameService {
                     throw new BadRequestException("{ \"message\": \"Error: bad request\" }");
                 }
                 else if ((tempGame.blackUsername() != null && playerColor.equals("BLACK")) ||
-                        ((tempGame.whiteUsername() != null && playerColor.equals("WHITE")))){
+                        (tempGame.whiteUsername() != null && playerColor.equals("WHITE"))){
                     throw new DataAccessException("{ \"message\": \"Error: already taken\" }");
                 }
                 myGame.updateGame(tempGame, tempAuth.username(), playerColor);

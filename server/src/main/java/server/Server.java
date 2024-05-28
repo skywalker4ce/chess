@@ -75,8 +75,14 @@ public class Server {
         });
 
         Spark.get("/game", (req, res) -> {
-            res.status(200);
-            return myHandler.listGamesHandler(req);
+            try {
+                res.status(200);
+                return myHandler.listGamesHandler(req);
+            }
+            catch (UnauthorizedException e){
+                res.status(401);
+                return e.getMessage();
+            }
         });
 
         Spark.post("/game", (req, res) -> {
@@ -112,7 +118,7 @@ public class Server {
         Spark.delete("/db", (req, res) -> {
             res.status(200);
             myHandler.clearApplicationHandler();
-            return "";
+            return "{}";
         });
     }
 }
