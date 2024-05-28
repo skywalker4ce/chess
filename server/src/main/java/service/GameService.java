@@ -8,11 +8,10 @@ import model.GameData;
 import server.BadRequestException;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class GameService {
-    MemoryAuthDAO myAuth = new MemoryAuthDAO();
-    MemoryGameDAO myGame = new MemoryGameDAO();
+    MemoryAuthDAO myAuth;
+    MemoryGameDAO myGame;
 
     public GameService(MemoryAuthDAO myAuth, MemoryGameDAO myGame){
         this.myAuth = myAuth;

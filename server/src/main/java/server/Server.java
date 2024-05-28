@@ -1,16 +1,10 @@
 package server;
 
 import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
 import service.UnauthorizedException;
 import spark.*;
 
 public class Server {
-    private static MemoryGameDAO myGameMemory = new MemoryGameDAO();
-    private static MemoryAuthDAO myAuthMemory = new MemoryAuthDAO();
-    private static MemoryUserDAO myUserMemory = new MemoryUserDAO();
 
 
     public int run(int desiredPort) {
