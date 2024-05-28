@@ -1,4 +1,4 @@
-package Service;
+package service;
 
 import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
@@ -9,10 +9,6 @@ import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.*;
 import server.BadRequestException;
-import service.ClearService;
-import service.GameService;
-import service.UnauthorizedException;
-import service.UserService;
 
 import java.util.ArrayList;
 
@@ -50,8 +46,8 @@ public class GameServiceTests {
     @Order(1)
     @DisplayName("Create Games Positive Test")
     public void createGamesPositive() throws UnauthorizedException {
-        int Game1ID = myGameService.createGame(auth1.authToken(), "Game1");
-        Assertions.assertNotNull(myGame.getGame(Game1ID));
+        int game1ID = myGameService.createGame(auth1.authToken(), "Game1");
+        Assertions.assertNotNull(myGame.getGame(game1ID));
     }
 
     @Test
@@ -100,7 +96,7 @@ public class GameServiceTests {
     @Test
     @Order(5)
     @DisplayName("Join Game Positive Test")
-    public void JoinGamePositive() throws UnauthorizedException, BadRequestException, DataAccessException {
+    public void joinGamePositive() throws UnauthorizedException, BadRequestException, DataAccessException {
         int game1ID = myGameService.createGame(auth1.authToken(), "Game1");
         myGameService.joinGame(auth1.authToken(), "WHITE", game1ID);
         GameData updatedGame = myGame.getGame(game1ID);
@@ -112,7 +108,7 @@ public class GameServiceTests {
     @Test
     @Order(6)
     @DisplayName("Join Game Negative Test")
-    public void JoinGameNegative() throws UnauthorizedException, BadRequestException, DataAccessException {
+    public void joinGameNegative() throws UnauthorizedException, BadRequestException, DataAccessException {
         int game1ID = myGameService.createGame(auth1.authToken(), "Game1");
         myGameService.joinGame(auth1.authToken(), "WHITE", game1ID);
         myGameService.joinGame(auth2.authToken(), "BLACK", game1ID);

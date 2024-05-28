@@ -1,4 +1,4 @@
-package Service;
+package service;
 
 import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
@@ -7,10 +7,6 @@ import dataaccess.MemoryUserDAO;
 import model.AuthData;
 import model.UserData;
 import org.junit.jupiter.api.*;
-import service.ClearService;
-import service.GameService;
-import service.UnauthorizedException;
-import service.UserService;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ClearServiceTests {

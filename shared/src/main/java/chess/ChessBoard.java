@@ -96,14 +96,6 @@ public class ChessBoard implements Cloneable {
     }
 
 
-    public void makeMoveTrial(ChessMove move, ChessPosition initialPosition){
-        //Update the chessboard to reflect this move
-        addPiece(move.getEndPosition(), getPiece(initialPosition));
-        addPiece(initialPosition, null);
-                                                                     //This might not be the correct way to handle an error
-    }
-
-
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
