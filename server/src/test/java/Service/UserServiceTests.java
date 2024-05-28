@@ -79,6 +79,34 @@ public class UserServiceTests {
 
     }
 
+    @Test
+    @Order(5)
+    @DisplayName("Logout Positive Test")
+    public void logoutPositive() throws UnauthorizedException, DataAccessException {
+        myUserService.register(new UserData("Sky", "Password1234", "email@gmail.com"));
+        AuthData testAuth = myUserService.login(new UserData("Sky", "Password1234", "email@gmail.com"));
+        myUserService.logout(testAuth.authToken());
+        Assertions.assertNull(myAuth.getAuth(testAuth.authToken()));
+
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("Logout Negative Test")
+    public void logoutNegative() throws UnauthorizedException, DataAccessException {
+        myUserService.register(new UserData("Sky", "Password1234", "email@gmail.com"));
+        myUserService.login(new UserData("Sky", "Password1234", "email@gmail.com"));
+        try {
+            myUserService.logout("randomAuthToken");
+            fail("Expected an Error");
+        }
+        catch (UnauthorizedException e){
+            Assertions.assertEquals("{ \"message\": \"Error: unauthorized\" }", e.getMessage());
+        }
+
+
+    }
+
 
 
 
