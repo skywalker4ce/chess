@@ -1,10 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
-import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.*;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -22,9 +19,9 @@ import spark.Request;
 import java.util.ArrayList;
 
 public class Handler {
-    private static MemoryGameDAO myGameMemory = new MemoryGameDAO();
-    private static MemoryAuthDAO myAuthMemory = new MemoryAuthDAO();
-    private static MemoryUserDAO myUserMemory = new MemoryUserDAO();
+    private static final SQLGameDAO myGameSQL = new SQLGameDAO();
+    private static final SQLAuthDAO myAuthSQL = new SQLAuthDAO();
+    private static final SQLUserDAO myUserSQL = new SQLUserDAO();
 
     private void checkInput(UserData obj) throws BadRequestException{
         if (obj.username() == null || obj.password() == null){
@@ -35,7 +32,7 @@ public class Handler {
     public String registerHandler(Request req) throws DataAccessException, BadRequestException, UnauthorizedException {
         try {
             var serializer = new Gson();
-            UserService myUserService = new UserService(myUserMemory, myAuthMemory);
+            UserService myUserService = new UserService(myUserSQL, myAuthSQL);
             //takes the object and turns it into a RegisterRequest class
             var objFromJson = serializer.fromJson(req.body(), UserData.class);
             checkInput(objFromJson);
@@ -56,7 +53,7 @@ public class Handler {
     public String loginHandler(Request req) throws DataAccessException, UnauthorizedException {
         try {
             var serializer = new Gson();
-            UserService myUserService = new UserService(myUserMemory, myAuthMemory);
+            UserService myUserService = new UserService(myUserSQL, myAuthSQL);
             var objFromJson = serializer.fromJson(req.body(), LoginRequest.class);
             UserData tempUser = new UserData(objFromJson.username(), objFromJson.password(), "");
             AuthData myAuthObject = myUserService.login(tempUser);
@@ -72,7 +69,7 @@ public class Handler {
 
     public String logoutHandler(Request req) throws UnauthorizedException{
         try {
-            UserService myUserService = new UserService(myUserMemory, myAuthMemory);
+            UserService myUserService = new UserService(myUserSQL, myAuthSQL);
             var authToken = req.headers("Authorization");
             myUserService.logout(authToken);
             return "";
@@ -85,7 +82,7 @@ public class Handler {
     public String listGamesHandler(Request req) throws UnauthorizedException{
         try {
             var serializer = new Gson();
-            GameService myGameService = new GameService(myAuthMemory, myGameMemory);
+            GameService myGameService = new GameService(myAuthSQL, myGameSQL);
             ArrayList<GameData> myGameList = myGameService.listGames(req.headers("Authorization"));
             var myListGameResult = new ListGamesResult(myGameList);
             return serializer.toJson(myListGameResult);
@@ -98,7 +95,7 @@ public class Handler {
     public String createGamesHandler(Request req) throws UnauthorizedException{
         try {
             var serializer = new Gson();
-            GameService myGameService = new GameService(myAuthMemory, myGameMemory);
+            GameService myGameService = new GameService(myAuthSQL, myGameSQL);
             int tempGameID = 0;
             var tempGameName = serializer.fromJson(req.body(), CreateGameRequest.class);
             var authToken = req.headers("Authorization");
@@ -115,7 +112,7 @@ public class Handler {
     public String joinGameHandler(Request req) throws UnauthorizedException, BadRequestException, DataAccessException{
         try {
             var serializer = new Gson();
-            GameService myGameService = new GameService(myAuthMemory, myGameMemory);
+            GameService myGameService = new GameService(myAuthSQL, myGameSQL);
             var objFromJson = serializer.fromJson(req.body(), JoinGameRequest.class);
             var authToken = req.headers("Authorization");
             myGameService.joinGame(authToken, objFromJson.playerColor(), objFromJson.gameID());
@@ -133,7 +130,7 @@ public class Handler {
     }
 
     public void clearApplicationHandler(){
-        ClearService myClearService = new ClearService(myUserMemory, myAuthMemory, myGameMemory);
+        ClearService myClearService = new ClearService(myUserSQL, myAuthSQL, myGameSQL);
         myClearService.clearApplication();
     }
 }

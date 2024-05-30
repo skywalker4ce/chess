@@ -1,10 +1,7 @@
 package service;
 
 
-import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.*;
 import model.AuthData;
 import model.UserData;
 import org.junit.jupiter.api.*;
@@ -13,9 +10,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class UserServiceTests {
-    MemoryUserDAO myUser = new MemoryUserDAO();
-    MemoryGameDAO myGame = new MemoryGameDAO();
-    MemoryAuthDAO myAuth = new MemoryAuthDAO();
+    SQLUserDAO myUser = new SQLUserDAO();
+    SQLGameDAO myGame = new SQLGameDAO();
+    SQLAuthDAO myAuth = new SQLAuthDAO();
     UserService myUserService = new UserService(myUser, myAuth);
     ClearService myClearService = new ClearService(myUser, myAuth, myGame);
 

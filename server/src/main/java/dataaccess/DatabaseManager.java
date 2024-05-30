@@ -48,22 +48,22 @@ public class DatabaseManager {
 
     public static void createTables() throws DataAccessException {
         var userTableCreationSQL = "CREATE TABLE IF NOT EXISTS " + DATABASE_NAME + ".user (" +
-                "Username VARCHAR(20) PRIMARY KEY NOT NULL, " +
-                "Password VARCHAR(72) NOT NULL, " +
-                "Email VARCHAR(30) " +
+                "username VARCHAR(20) PRIMARY KEY NOT NULL, " +
+                "password VARCHAR(72) NOT NULL, " +
+                "email VARCHAR(30) " +
                 ");";
 
         var authTableCreationSQL = "CREATE TABLE IF NOT EXISTS " + DATABASE_NAME + ".auth (" +
-                "AuthToken VARCHAR(40) PRIMARY KEY NOT NULL, " +
-                "Username VARCHAR(20) NOT NULL " +
+                "authToken VARCHAR(40) PRIMARY KEY NOT NULL, " +
+                "username VARCHAR(20) NOT NULL " +
                 ");";
 
         var gameTableCreationSQL = "CREATE TABLE IF NOT EXISTS " + DATABASE_NAME + ".game (" +
-                "GameID INT PRIMARY KEY AUTO_INCREMENT, " +
-                "WhiteUsername VARCHAR(20), " +
-                "BlackUsername VARCHAR(20), " +
-                "GameName VARCHAR(20), " +
-                "ChessGame LONGTEXT " +
+                "gameID INT PRIMARY KEY AUTO_INCREMENT, " +
+                "whiteUsername VARCHAR(20), " +
+                "blackUsername VARCHAR(20), " +
+                "gameName VARCHAR(20), " +
+                "chessGame LONGTEXT " +
                 ");";
 
         try {

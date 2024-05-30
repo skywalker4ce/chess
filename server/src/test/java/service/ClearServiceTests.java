@@ -1,18 +1,15 @@
 package service;
 
-import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.*;
 import model.AuthData;
 import model.UserData;
 import org.junit.jupiter.api.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ClearServiceTests {
-    MemoryUserDAO myUser = new MemoryUserDAO();
-    MemoryGameDAO myGame = new MemoryGameDAO();
-    MemoryAuthDAO myAuth = new MemoryAuthDAO();
+    SQLUserDAO myUser = new SQLUserDAO();
+    SQLGameDAO myGame = new SQLGameDAO();
+    SQLAuthDAO myAuth = new SQLAuthDAO();
     UserService myUserService = new UserService(myUser, myAuth);
     GameService myGameService = new GameService(myAuth, myGame);
     ClearService myClearService = new ClearService(myUser, myAuth, myGame);
@@ -44,7 +41,7 @@ public class ClearServiceTests {
     @Test
     @Order(1)
     @DisplayName("Clear data Positive Test")
-    public void clearDataPositive(){
+    public void clearDataPositive() throws DataAccessException {
         myClearService.clearApplication();
         Assertions.assertNull(myGame.getGame(game1));
         Assertions.assertNull(myGame.getGame(game2));

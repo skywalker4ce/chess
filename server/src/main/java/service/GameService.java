@@ -1,8 +1,6 @@
 package service;
 
-import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
+import dataaccess.*;
 import model.AuthData;
 import model.GameData;
 import server.BadRequestException;
@@ -10,10 +8,10 @@ import server.BadRequestException;
 import java.util.ArrayList;
 
 public class GameService {
-    MemoryAuthDAO myAuth;
-    MemoryGameDAO myGame;
+    SQLAuthDAO myAuth;
+    SQLGameDAO myGame;
 
-    public GameService(MemoryAuthDAO myAuth, MemoryGameDAO myGame){
+    public GameService(SQLAuthDAO myAuth, SQLGameDAO myGame){
         this.myAuth = myAuth;
         this.myGame = myGame;
     }
