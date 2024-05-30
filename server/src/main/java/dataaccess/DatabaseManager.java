@@ -34,12 +34,53 @@ public class DatabaseManager {
     /**
      * Creates the database if it does not already exist.
      */
-    static void createDatabase() throws DataAccessException {
+    public static void createDatabase() throws DataAccessException {                //I changed this to be public!! Not sure if that's allowed
         try {
             var statement = "CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME;
             var conn = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
             try (var preparedStatement = conn.prepareStatement(statement)) {
                 preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
+    public static void createTables() throws DataAccessException {
+        var userTableCreationSQL = "CREATE TABLE IF NOT EXISTS " + DATABASE_NAME + ".user (" +
+                "Username VARCHAR(20) PRIMARY KEY NOT NULL, " +
+                "Password VARCHAR(72) NOT NULL, " +
+                "Email VARCHAR(30) " +
+                ");";
+
+        var authTableCreationSQL = "CREATE TABLE IF NOT EXISTS " + DATABASE_NAME + ".auth (" +
+                "AuthToken VARCHAR(40) PRIMARY KEY NOT NULL, " +
+                "Username VARCHAR(20) NOT NULL " +
+                ");";
+
+        var gameTableCreationSQL = "CREATE TABLE IF NOT EXISTS " + DATABASE_NAME + ".game (" +
+                "GameID INT PRIMARY KEY AUTO_INCREMENT, " +
+                "WhiteUsername VARCHAR(20), " +
+                "BlackUsername VARCHAR(20), " +
+                "GameName VARCHAR(20), " +
+                "ChessGame LONGTEXT " +
+                ");";
+
+        try {
+            // Connect to the specific database
+            String databaseURL = CONNECTION_URL + '/' + DATABASE_NAME;
+            Connection conn = DriverManager.getConnection(databaseURL, USER, PASSWORD);
+            try (PreparedStatement preparedStatement = conn.prepareStatement(userTableCreationSQL)) {
+                preparedStatement.executeUpdate();
+                System.out.println("User Table created successfully.");
+            }
+            try (PreparedStatement preparedStatement = conn.prepareStatement(authTableCreationSQL)) {
+                preparedStatement.executeUpdate();
+                System.out.println("Auth Table created successfully.");
+            }
+            try (PreparedStatement preparedStatement = conn.prepareStatement(gameTableCreationSQL)) {
+                preparedStatement.executeUpdate();
+                System.out.println("Game Table created successfully.");
             }
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
@@ -58,7 +99,7 @@ public class DatabaseManager {
      * }
      * </code>
      */
-    static Connection getConnection() throws DataAccessException {
+    public static Connection getConnection() throws DataAccessException {
         try {
             var conn = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
             conn.setCatalog(DATABASE_NAME);
