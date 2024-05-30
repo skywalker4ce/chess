@@ -72,15 +72,12 @@ public class DatabaseManager {
             Connection conn = DriverManager.getConnection(databaseURL, USER, PASSWORD);
             try (PreparedStatement preparedStatement = conn.prepareStatement(userTableCreationSQL)) {
                 preparedStatement.executeUpdate();
-                System.out.println("User Table created successfully.");
             }
             try (PreparedStatement preparedStatement = conn.prepareStatement(authTableCreationSQL)) {
                 preparedStatement.executeUpdate();
-                System.out.println("Auth Table created successfully.");
             }
             try (PreparedStatement preparedStatement = conn.prepareStatement(gameTableCreationSQL)) {
                 preparedStatement.executeUpdate();
-                System.out.println("Game Table created successfully.");
             }
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());

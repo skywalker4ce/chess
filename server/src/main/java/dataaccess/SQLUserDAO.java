@@ -30,6 +30,14 @@ public class SQLUserDAO implements UserDAO{
                 stmt.setString(1, username);
                 stmt.setString(2, newPassword);
                 stmt.setString(3, email);
+
+                int rowsAffected = stmt.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    System.out.println("User created successfully.");
+                } else {
+                    System.out.println("Failed to create user.");
+                }
             }
         }
         catch (DataAccessException | SQLException e){
