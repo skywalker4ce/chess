@@ -4,6 +4,9 @@ import dataaccess.DataAccessException;
 import service.UnauthorizedException;
 import spark.*;
 
+import static dataaccess.DatabaseManager.createDatabase;
+import static dataaccess.DatabaseManager.createTables;
+
 public class Server {
 
 
@@ -11,7 +14,13 @@ public class Server {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
-
+        try {
+            createDatabase();
+            createTables();
+        }
+        catch (DataAccessException e){
+            System.out.println(e.getMessage());
+        }
         // Register your endpoints and handle exceptions here.
         createRoutes();
 

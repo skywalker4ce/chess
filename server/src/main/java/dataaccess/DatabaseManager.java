@@ -47,9 +47,9 @@ public class DatabaseManager {
     }
 
     public static void createTables() throws DataAccessException {
-        var clearUserData = "TRUNCATE TABLE user;";
-        var clearAuthData = "TRUNCATE TABLE auth;";
-        var clearGameData = "TRUNCATE TABLE game;";
+        var clearUserData = "DELETE FROM user;";
+        var clearAuthData = "DELETE FROM auth;";
+        var clearGameData = "DELETE FROM game;";
 
         var userTableCreationSQL = "CREATE TABLE IF NOT EXISTS " + DATABASE_NAME + ".user (" +
                 "username VARCHAR(20) PRIMARY KEY NOT NULL, " +
@@ -76,6 +76,7 @@ public class DatabaseManager {
             Connection conn = DriverManager.getConnection(databaseURL, USER, PASSWORD);
             try (PreparedStatement preparedStatement = conn.prepareStatement(clearUserData)) {
                 preparedStatement.executeUpdate();
+                System.out.println("Should have deleted this table");
             }
             try (PreparedStatement preparedStatement = conn.prepareStatement(clearAuthData)) {
                 preparedStatement.executeUpdate();

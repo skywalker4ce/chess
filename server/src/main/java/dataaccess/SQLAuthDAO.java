@@ -22,7 +22,7 @@ public class SQLAuthDAO implements AuthDAO{
     public AuthData createAuth(String username){
         genAuthToken = UUID.randomUUID().toString();
 
-        var createAuthSQL = "INSERT INTO auth (username, authToken) values (?, ?)";
+        var createAuthSQL = "INSERT INTO auth (username, authToken) values (?, ?);";
 
         try {
             var conn = getConnection();
@@ -46,7 +46,7 @@ public class SQLAuthDAO implements AuthDAO{
     }
 
     public AuthData getAuth(String authToken){
-        var getAuthSQL = "SELECT username, authToken, email FROM user WHERE authToken = ?";
+        var getAuthSQL = "SELECT authToken, username FROM auth WHERE authToken = ?;";
 
         try{
             var conn = getConnection();
@@ -71,5 +71,24 @@ public class SQLAuthDAO implements AuthDAO{
 
     public void deleteAuth(String authToken){
 
+        var deleteAuthSQL = "DELETE FROM auth WHERE authToken = ?;";
+
+        try {
+            var conn = getConnection();
+            try(PreparedStatement stmt = conn.prepareStatement(deleteAuthSQL)){
+                stmt.setString(1, authToken);
+
+                int rowsAffected = stmt.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    System.out.println("Auth deleted successfully.");
+                } else {
+                    System.out.println("Failed to delete auth.");
+                }
+            }
+        }
+        catch (DataAccessException | SQLException e){
+            System.out.println(e.getMessage());
+        }
     }
 }
