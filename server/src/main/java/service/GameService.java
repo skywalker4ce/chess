@@ -16,7 +16,7 @@ public class GameService {
         this.myGame = myGame;
     }
 
-    public ArrayList<GameData> listGames(String authToken) throws UnauthorizedException{
+    public ArrayList<GameData> listGames(String authToken) throws UnauthorizedException {
         if (myAuth.getAuth(authToken) != null){
             return myGame.listGames();
         }

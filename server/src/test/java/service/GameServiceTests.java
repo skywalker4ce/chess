@@ -42,7 +42,7 @@ public class GameServiceTests {
     @Test
     @Order(1)
     @DisplayName("Create Games Positive Test")
-    public void createGamesPositive() throws UnauthorizedException {
+    public void createGamesPositive() throws UnauthorizedException, DataAccessException {
         int game1ID = myGameService.createGame(auth1.authToken(), "Game1");
         Assertions.assertNotNull(myGame.getGame(game1ID));
     }

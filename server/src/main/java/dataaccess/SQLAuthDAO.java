@@ -82,13 +82,7 @@ public class SQLAuthDAO implements AuthDAO{
             try(PreparedStatement stmt = conn.prepareStatement(deleteAuthSQL)){
                 stmt.setString(1, authToken);
 
-                int rowsAffected = stmt.executeUpdate();
-
-                if (rowsAffected > 0) {
-                    System.out.println("Auth deleted successfully.");
-                } else {
-                    System.out.println("Failed to delete auth.");
-                }
+                stmt.executeUpdate();
             }
         }
         catch (DataAccessException | SQLException e){

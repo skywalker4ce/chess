@@ -67,7 +67,7 @@ public class DatabaseManager {
                 "whiteUsername VARCHAR(20), " +
                 "blackUsername VARCHAR(20), " +
                 "gameName VARCHAR(20), " +
-                "chessGame LONGTEXT " +
+                "game LONGTEXT " +
                 ");";
 
         try {

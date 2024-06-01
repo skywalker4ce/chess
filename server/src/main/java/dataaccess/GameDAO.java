@@ -12,7 +12,7 @@ public interface GameDAO {
     int createGame(String gameName);
 
     //gets a game object
-    GameData getGame(int gameID);
+    GameData getGame(int gameID) throws DataAccessException;
 
     //returns a list of the games
     ArrayList<GameData> listGames();
