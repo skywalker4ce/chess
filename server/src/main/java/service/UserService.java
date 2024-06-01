@@ -26,8 +26,7 @@ public class UserService {
 
     public AuthData login(UserData user) throws DataAccessException, UnauthorizedException {
         UserData tempUser = myUser.getUser(user.username());
-        String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
-        if (tempUser != null && tempUser.username() != null && BCrypt.checkpw(hashedPassword, tempUser.password())) {
+        if (tempUser != null && tempUser.username() != null && BCrypt.checkpw(user.password(), tempUser.password())) {
             return myAuth.createAuth(user.username());
         }
         throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");

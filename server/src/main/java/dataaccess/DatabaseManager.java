@@ -47,6 +47,10 @@ public class DatabaseManager {
     }
 
     public static void createTables() throws DataAccessException {
+        var clearUserData = "TRUNCATE TABLE user;";
+        var clearAuthData = "TRUNCATE TABLE auth;";
+        var clearGameData = "TRUNCATE TABLE game;";
+
         var userTableCreationSQL = "CREATE TABLE IF NOT EXISTS " + DATABASE_NAME + ".user (" +
                 "username VARCHAR(20) PRIMARY KEY NOT NULL, " +
                 "password VARCHAR(72) NOT NULL, " +
@@ -70,6 +74,15 @@ public class DatabaseManager {
             // Connect to the specific database
             String databaseURL = CONNECTION_URL + '/' + DATABASE_NAME;
             Connection conn = DriverManager.getConnection(databaseURL, USER, PASSWORD);
+            try (PreparedStatement preparedStatement = conn.prepareStatement(clearUserData)) {
+                preparedStatement.executeUpdate();
+            }
+            try (PreparedStatement preparedStatement = conn.prepareStatement(clearAuthData)) {
+                preparedStatement.executeUpdate();
+            }
+            try (PreparedStatement preparedStatement = conn.prepareStatement(clearGameData)) {
+                preparedStatement.executeUpdate();
+            }
             try (PreparedStatement preparedStatement = conn.prepareStatement(userTableCreationSQL)) {
                 preparedStatement.executeUpdate();
             }
