@@ -76,7 +76,6 @@ public class DatabaseManager {
             Connection conn = DriverManager.getConnection(databaseURL, USER, PASSWORD);
             try (PreparedStatement preparedStatement = conn.prepareStatement(clearUserData)) {
                 preparedStatement.executeUpdate();
-                System.out.println("Should have deleted this table");
             }
             try (PreparedStatement preparedStatement = conn.prepareStatement(clearAuthData)) {
                 preparedStatement.executeUpdate();

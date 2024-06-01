@@ -16,7 +16,17 @@ public class SQLAuthDAO implements AuthDAO{
     public SQLAuthDAO() {}
 
     public void clear(){
+        var clearAuthData = "DELETE FROM auth;";
 
+        try {
+            // Connect to the specific database
+            var conn = getConnection();
+            try (PreparedStatement preparedStatement = conn.prepareStatement(clearAuthData)) {
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException | DataAccessException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public AuthData createAuth(String username){
@@ -30,13 +40,7 @@ public class SQLAuthDAO implements AuthDAO{
                 stmt.setString(1, username);
                 stmt.setString(2, genAuthToken);
 
-                int rowsAffected = stmt.executeUpdate();
-
-                if (rowsAffected > 0) {
-                    System.out.println("Auth created successfully.");
-                } else {
-                    System.out.println("Failed to create auth.");
-                }
+                stmt.executeUpdate();
             }
         }
         catch (DataAccessException | SQLException e){

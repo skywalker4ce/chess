@@ -3,9 +3,7 @@ package dataaccess;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 import static dataaccess.DatabaseManager.getConnection;
 
@@ -18,6 +16,17 @@ public class SQLUserDAO implements UserDAO{
     }
 
     public void clear(){
+        var clearUserData = "DELETE FROM user;";
+
+        try {
+            // Connect to the specific database
+            var conn = getConnection();
+            try (PreparedStatement preparedStatement = conn.prepareStatement(clearUserData)) {
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException | DataAccessException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void createUser(String username, String password, String email){
@@ -31,13 +40,8 @@ public class SQLUserDAO implements UserDAO{
                 stmt.setString(2, newPassword);
                 stmt.setString(3, email);
 
-                int rowsAffected = stmt.executeUpdate();
+                stmt.executeUpdate();
 
-                if (rowsAffected > 0) {
-                    System.out.println("User created successfully.");
-                } else {
-                    System.out.println("Failed to create user.");
-                }
             }
         }
         catch (DataAccessException | SQLException e){

@@ -5,8 +5,6 @@ import model.AuthData;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.util.Objects;
-
 public class UserService {
     SQLUserDAO myUser;
     SQLAuthDAO myAuth;
