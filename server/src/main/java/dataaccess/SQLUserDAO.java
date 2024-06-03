@@ -17,26 +17,8 @@ public class SQLUserDAO implements UserDAO{
 
     public void clear(){
         var clearUserData = "TRUNCATE TABLE user;";
-        Connection conn = null;
-
-        try {
-            // Connect to the specific database
-            conn = getConnection();
-            try (PreparedStatement preparedStatement = conn.prepareStatement(clearUserData)) {
-                preparedStatement.executeUpdate();
-            }
-        } catch (SQLException | DataAccessException e) {
-            System.out.println(e.getMessage());
-        }
-        finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    System.out.println("Failed to close connection: " + e.getMessage());
-                }
-            }
-        }
+        ClearDAO clear = new ClearDAO();
+        clear.clearData(clearUserData);
     }
 
     public void createUser(String username, String password, String email) throws DataAccessException {

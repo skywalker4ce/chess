@@ -18,26 +18,8 @@ public class SQLAuthDAO implements AuthDAO{
 
     public void clear(){
         var clearAuthData = "TRUNCATE TABLE auth;";
-        Connection conn = null;
-
-        try {
-            // Connect to the specific database
-            conn = getConnection();
-            try (PreparedStatement preparedStatement = conn.prepareStatement(clearAuthData)) {
-                preparedStatement.executeUpdate();
-            }
-        } catch (SQLException | DataAccessException e) {
-            System.out.println(e.getMessage());
-        }
-        finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    System.out.println("Failed to close connection: " + e.getMessage());
-                }
-            }
-        }
+        ClearDAO clear = new ClearDAO();
+        clear.clearData(clearAuthData);
     }
 
     public AuthData createAuth(String username) throws DataAccessException {
