@@ -19,9 +19,9 @@ import spark.Request;
 import java.util.ArrayList;
 
 public class Handler {
-    private static final SQLGameDAO myGameSQL = new SQLGameDAO();
-    private static final SQLAuthDAO myAuthSQL = new SQLAuthDAO();
-    private static final SQLUserDAO myUserSQL = new SQLUserDAO();
+    private static SQLGameDAO myGameSQL = new SQLGameDAO();
+    private static SQLAuthDAO myAuthSQL = new SQLAuthDAO();
+    private static SQLUserDAO myUserSQL = new SQLUserDAO();
 
     private void checkInput(UserData obj) throws BadRequestException{
         if (obj.username() == null || obj.password() == null){

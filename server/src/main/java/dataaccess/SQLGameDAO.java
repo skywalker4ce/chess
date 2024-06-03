@@ -115,9 +115,9 @@ public class SQLGameDAO implements GameDAO{
                 try(ResultSet rs = stmt.executeQuery()){
                     while (rs.next()){
                         int gameID = rs.getInt("gameID");
-                        String whiteUsername = rs.getString("whiteUsername");
                         String blackUsername = rs.getString("blackUsername");
                         String gameName = rs.getString("gameName");
+                        String whiteUsername = rs.getString("whiteUsername");
                         String game = rs.getString("game");
                         var serializer = new Gson();
                         ChessGame tempGame = serializer.fromJson(game, ChessGame.class);
