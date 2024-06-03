@@ -16,25 +16,36 @@ public class SQLUserDAO implements UserDAO{
     }
 
     public void clear(){
-        var clearUserData = "DELETE FROM user;";
+        var clearUserData = "TRUNCATE TABLE user;";
+        Connection conn = null;
 
         try {
             // Connect to the specific database
-            var conn = getConnection();
+            conn = getConnection();
             try (PreparedStatement preparedStatement = conn.prepareStatement(clearUserData)) {
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException | DataAccessException e) {
             System.out.println(e.getMessage());
         }
+        finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    System.out.println("Failed to close connection: " + e.getMessage());
+                }
+            }
+        }
     }
 
-    public void createUser(String username, String password, String email){
+    public void createUser(String username, String password, String email) throws DataAccessException {
         var createUserSQL = "INSERT INTO user (username, password, email) values (?, ?, ?)";
+        Connection conn = null;
 
         String newPassword = hashPassword(password);
         try {
-            var conn = getConnection();
+            conn = getConnection();
             try(PreparedStatement stmt = conn.prepareStatement(createUserSQL)){
                 stmt.setString(1, username);
                 stmt.setString(2, newPassword);
@@ -45,15 +56,25 @@ public class SQLUserDAO implements UserDAO{
             }
         }
         catch (DataAccessException | SQLException e){
-            System.out.println(e.getMessage());
+            throw new DataAccessException("fields can't be empty");
+        }
+        finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    System.out.println("Failed to close connection: " + e.getMessage());
+                }
+            }
         }
     }
 
     public UserData getUser(String username) throws DataAccessException{
         var getUserSQL = "SELECT username, password, email FROM user WHERE username = ?";
+        Connection conn = null;
 
         try{
-            var conn = getConnection();
+            conn = getConnection();
             try(PreparedStatement stmt = conn.prepareStatement(getUserSQL)){
                 stmt.setString(1, username);
                 try(ResultSet rs = stmt.executeQuery()){
@@ -71,6 +92,15 @@ public class SQLUserDAO implements UserDAO{
         }
         catch (DataAccessException | SQLException e){
             throw new DataAccessException("Some error with the SQL");
+        }
+        finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    System.out.println("Failed to close connection: " + e.getMessage());
+                }
+            }
         }
 
     }

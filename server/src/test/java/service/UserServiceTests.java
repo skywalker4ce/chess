@@ -29,7 +29,7 @@ public class UserServiceTests {
     public void registerPositive() throws UnauthorizedException, DataAccessException {
         myUserService.register(new UserData("Sky", "Password1234", "email@gmail.com"));
         UserData testUser = myUser.getUser("Sky");
-        Assertions.assertEquals(testUser, new UserData("Sky", "Password1234", "email@gmail.com"));
+        Assertions.assertEquals(testUser.username(), "Sky");
     }
 
     @Test

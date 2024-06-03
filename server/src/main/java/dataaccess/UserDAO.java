@@ -7,7 +7,7 @@ public interface UserDAO {
     void clear();
 
     //creates a user object
-    void createUser(String username, String password, String email);
+    void createUser(String username, String password, String email) throws DataAccessException;
 
     //gets a user object
     UserData getUser(String username) throws DataAccessException;

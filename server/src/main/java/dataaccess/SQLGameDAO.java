@@ -7,6 +7,7 @@ import model.UserData;
 import request.CreateGameRequest;
 import service.GameService;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,27 +21,41 @@ public class SQLGameDAO implements GameDAO{
     public SQLGameDAO() {}
 
     public void clear(){
-        var clearGameData = "DELETE FROM game;";
+        var clearGameData = "TRUNCATE TABLE game;";
+        Connection conn = null;
 
         try {
             // Connect to the specific database
-            var conn = getConnection();
+            conn = getConnection();
             try (PreparedStatement preparedStatement = conn.prepareStatement(clearGameData)) {
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException | DataAccessException e) {
             System.out.println(e.getMessage());
         }
+        finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    System.out.println("Failed to close connection: " + e.getMessage());
+                }
+            }
+        }
     }
 
     public int createGame(String gameName){
+        if (gameName == null){
+            return 0;
+        }
         var createGameSQL = "INSERT INTO game (whiteUsername, blackUsername, gameName, game) values (?, ?, ?, ?);";
         var serializer = new Gson();
         ChessGame game = new ChessGame();
         var tempGame = serializer.toJson(game);
+        Connection conn = null;
 
         try {
-            var conn = getConnection();
+            conn = getConnection();
             try(PreparedStatement stmt = conn.prepareStatement(createGameSQL, PreparedStatement.RETURN_GENERATED_KEYS)){
                 stmt.setString(1, null);
                 stmt.setString(2, null);
@@ -57,14 +72,24 @@ public class SQLGameDAO implements GameDAO{
         catch (DataAccessException | SQLException e){
             System.out.println(e.getMessage());
         }
+        finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    System.out.println("Failed to close connection: " + e.getMessage());
+                }
+            }
+        }
         return 0;
     }
 
     public GameData getGame(int gameID) throws DataAccessException {
         var getGameSQL = "SELECT whiteUsername, blackUsername, gameName, game FROM game WHERE gameID = ?";
+        Connection conn = null;
 
         try{
-            var conn = getConnection();
+            conn = getConnection();
             try(PreparedStatement stmt = conn.prepareStatement(getGameSQL)){
                 stmt.setInt(1, gameID);
                 try(ResultSet rs = stmt.executeQuery()){
@@ -86,14 +111,24 @@ public class SQLGameDAO implements GameDAO{
         catch (DataAccessException | SQLException e){
             throw new DataAccessException("Some error with the SQL");
         }
+        finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    System.out.println("Failed to close connection: " + e.getMessage());
+                }
+            }
+        }
     }
 
     public ArrayList<GameData> listGames(){
         var getGameListSQL = "SELECT * FROM game;";
         ArrayList<GameData> gameList = new ArrayList<>();
+        Connection conn = null;
 
         try{
-            var conn = getConnection();
+            conn = getConnection();
             try(PreparedStatement stmt = conn.prepareStatement(getGameListSQL)){
                 try(ResultSet rs = stmt.executeQuery()){
                     while (rs.next()){
@@ -114,6 +149,15 @@ public class SQLGameDAO implements GameDAO{
         catch (DataAccessException | SQLException e){
             System.out.println(e.getMessage());
         }
+        finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    System.out.println("Failed to close connection: " + e.getMessage());
+                }
+            }
+        }
         return gameList;
     }
 
@@ -129,8 +173,9 @@ public class SQLGameDAO implements GameDAO{
     }
 
     private void executeUpdate(GameData game, String username, String updateGameSQL) {
+        Connection conn = null;
         try{
-            var conn = getConnection();
+            conn = getConnection();
             try(PreparedStatement stmt = conn.prepareStatement(updateGameSQL)){
                 stmt.setString(1, username);
                 stmt.setInt(2, game.gameID());
@@ -139,6 +184,15 @@ public class SQLGameDAO implements GameDAO{
         }
         catch (DataAccessException | SQLException e){
             System.out.println(e.getMessage());
+        }
+        finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    System.out.println("Failed to close connection: " + e.getMessage());
+                }
+            }
         }
     }
 }

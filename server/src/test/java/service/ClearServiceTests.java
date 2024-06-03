@@ -27,6 +27,7 @@ public class ClearServiceTests {
 
     @BeforeEach
     public void setup() throws UnauthorizedException, DataAccessException {
+        myClearService.clearApplication();
         auth4 = myUserService.register(randomUser1);
         myUserService.register(randomUser2);
         myUserService.register(randomUser3);
