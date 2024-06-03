@@ -3,10 +3,6 @@ package dataaccess;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import model.GameData;
-import model.UserData;
-import request.CreateGameRequest;
-import service.GameService;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -76,13 +72,7 @@ public class SQLGameDAO implements GameDAO{
                 stmt.setInt(1, gameID);
                 try(ResultSet rs = stmt.executeQuery()){
                     if (rs.next()){
-                        String whiteUsername = rs.getString("whiteUsername");
-                        String blackUsername = rs.getString("blackUsername");
-                        String gameName = rs.getString("gameName");
-                        String game = rs.getString("game");
-                        var serializer = new Gson();
-                        ChessGame tempGame = serializer.fromJson(game, ChessGame.class);
-                        return new GameData(gameID, whiteUsername, blackUsername, gameName, tempGame);
+                        return setGameData(rs, gameID);
                     }
                     else{
                         return null;
@@ -115,13 +105,7 @@ public class SQLGameDAO implements GameDAO{
                 try(ResultSet rs = stmt.executeQuery()){
                     while (rs.next()){
                         int gameID = rs.getInt("gameID");
-                        String blackUsername = rs.getString("blackUsername");
-                        String gameName = rs.getString("gameName");
-                        String whiteUsername = rs.getString("whiteUsername");
-                        String game = rs.getString("game");
-                        var serializer = new Gson();
-                        ChessGame tempGame = serializer.fromJson(game, ChessGame.class);
-                        GameData myGame = new GameData(gameID, whiteUsername, blackUsername, gameName, tempGame);
+                        GameData myGame = setGameData(rs, gameID);
                         gameList.add(myGame);
                     }
                     return gameList;
@@ -141,6 +125,17 @@ public class SQLGameDAO implements GameDAO{
             }
         }
         return gameList;
+    }
+
+    private GameData setGameData(ResultSet rs, int gameID) throws SQLException {
+        String whiteUsername = rs.getString("whiteUsername");
+        String blackUsername = rs.getString("blackUsername");
+        String gameName = rs.getString("gameName");
+        String game = rs.getString("game");
+        var serializer = new Gson();
+        ChessGame tempGame = serializer.fromJson(game, ChessGame.class);
+        GameData myGame = new GameData(gameID, whiteUsername, blackUsername, gameName, tempGame);
+        return myGame;
     }
 
     public void updateGame(GameData game, String username, String playerColor){
