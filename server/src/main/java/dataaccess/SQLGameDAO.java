@@ -81,7 +81,7 @@ public class SQLGameDAO implements GameDAO{
             }
         }
         catch (DataAccessException | SQLException e){
-            throw new DataAccessException("Some error with the SQL");
+            throw new DataAccessException("Some error with the Game SQL");
         }
         finally {
             if (conn != null) {

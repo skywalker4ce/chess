@@ -73,7 +73,7 @@ public class SQLUserDAO implements UserDAO{
             }
         }
         catch (DataAccessException | SQLException e){
-            throw new DataAccessException("Some error with the SQL");
+            throw new DataAccessException("Some error with the User SQL");
         }
         finally {
             if (conn != null) {
