@@ -19,9 +19,15 @@ public class ServerFacade {
         URI uri = new URI("http://localhost:8080/user");
         String requestType = "POST";
         UserData user = new UserData(username, password, email);
-        var jsonUser = new Gson().toJson(user);
-        connector.connect(uri, requestType, null, jsonUser);
-        return null;
+        Gson gson = new Gson();
+        var jsonUser = gson.toJson(user);
+        String responseString = connector.connect(uri, requestType, null, jsonUser);
+        if (responseString != null) {
+            AuthData classObject = gson.fromJson(responseString, AuthData.class);
+            return classObject.authToken();
+        }
+        else
+            return null;
     }
 
     public String login(String username, String password) throws Exception {
@@ -29,8 +35,8 @@ public class ServerFacade {
         String requestType = "POST";
         LoginRequest user = new LoginRequest(username, password);
         var jsonUser = new Gson().toJson(user);
-        InputStreamReader httpString = connector.connect(uri, requestType, null, jsonUser);
-        AuthData classObject = new Gson().fromJson(httpString, AuthData.class);
+        String responseString = connector.connect(uri, requestType, null, jsonUser);
+        AuthData classObject = new Gson().fromJson(responseString, AuthData.class);
         return classObject.authToken();
     }
 

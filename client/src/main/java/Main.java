@@ -4,8 +4,7 @@ import web.ServerFacade;
 import java.util.Objects;
 import java.util.Scanner;
 
-import static ui.EscapeSequences.RESET_TEXT_BOLD_FAINT;
-import static ui.EscapeSequences.SET_TEXT_BOLD;
+import static ui.EscapeSequences.*;
 
 public class Main {
     static ServerFacade facade = new ServerFacade();
@@ -14,7 +13,7 @@ public class Main {
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         System.out.println("♕ 240 Chess Client: " + piece);
         for (int i = 0; i < 3; i++) {
-            System.out.println(SET_TEXT_BOLD + "Welcome to 240 Chess. Press 1 to continue: " + RESET_TEXT_BOLD_FAINT);
+            System.out.println(SET_TEXT_BOLD + SET_TEXT_COLOR_WHITE + "Welcome to 240 Chess. Press 1 to continue: " + RESET_TEXT_BOLD_FAINT);
             Scanner scanner = new Scanner(System.in);
             var input = scanner.next();
             if (Objects.equals(input, "1")){
@@ -28,6 +27,7 @@ public class Main {
     private static void preLoginMenu() throws Exception {
         Scanner scanner = new Scanner(System.in);
         String authToken;
+        facade.clear();
         menu:
         while (true){
             System.out.println(SET_TEXT_BOLD + "Enter a number (1-4) to continue:" + RESET_TEXT_BOLD_FAINT);
@@ -44,9 +44,17 @@ public class Main {
                     String password = scanner.next();
                     System.out.println("Enter a valid Email: ");
                     String email = scanner.next();
-                    authToken = facade.register(username, password, email);
-                    if (authToken != null){
-                        postLoginMenu();
+                    if (username == null || password == null || email == null){
+                        System.out.println(SET_TEXT_COLOR_RED + "No fields can be blank. Please try again" + SET_TEXT_COLOR_WHITE);
+                    }
+                    else {
+                        authToken = facade.register(username, password, email);
+                        if (authToken != null){
+                            postLoginMenu();
+                        }
+                        else {
+                            System.out.println(SET_TEXT_COLOR_RED + "Username already taken. Please choose another one." + SET_TEXT_COLOR_WHITE);
+                        }
                     }
                     break;
                 case "2":

@@ -13,7 +13,7 @@ import java.util.Objects;
 
 public class ServerConnector {
 
-    public InputStreamReader connect(URI uri, String requestType, String header, String body) throws Exception {
+    public String connect(URI uri, String requestType, String header, String body) throws Exception {
         HttpURLConnection http = getHttpURLConnection(uri, requestType, header);
 
         //body
@@ -25,19 +25,26 @@ public class ServerConnector {
 
         // Output the response body
         if (http.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            try (InputStream respBody = http.getInputStream()) {
-                InputStreamReader inputStreamReader = new InputStreamReader(respBody);
-                return inputStreamReader;
+            try (InputStream respBody = http.getInputStream();
+                 InputStreamReader inputStreamReader = new InputStreamReader(respBody);
+                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+                StringBuilder responseBuilder = new StringBuilder();
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    responseBuilder.append(line);
+                }
+                return responseBuilder.toString();
             }
         } else {
             InputStream responseBody = http.getErrorStream();
             if (responseBody != null) {
-                InputStreamReader inputStreamReader = new InputStreamReader(responseBody);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    System.out.println(line);
-                }
+                return null;
+//                InputStreamReader inputStreamReader = new InputStreamReader(responseBody);
+//                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+//                String line;
+//                while ((line = bufferedReader.readLine()) != null) {
+//                    System.out.println(line);
+//                }
             }
         }
         return null;
