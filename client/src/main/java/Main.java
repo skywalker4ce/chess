@@ -9,7 +9,6 @@ import static ui.EscapeSequences.SET_TEXT_BOLD;
 
 public class Main {
     static ServerFacade facade = new ServerFacade();
-    private String authToken;
 
     public static void main(String[] args) throws Exception {
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
@@ -28,6 +27,7 @@ public class Main {
 
     private static void preLoginMenu() throws Exception {
         Scanner scanner = new Scanner(System.in);
+        String authToken;
         menu:
         while (true){
             System.out.println(SET_TEXT_BOLD + "Enter a number (1-4) to continue:" + RESET_TEXT_BOLD_FAINT);
@@ -44,8 +44,10 @@ public class Main {
                     String password = scanner.next();
                     System.out.println("Enter a valid Email: ");
                     String email = scanner.next();
-                    facade.register(username, password, email);
-                    postLoginMenu();
+                    authToken = facade.register(username, password, email);
+                    if (authToken != null){
+                        postLoginMenu();
+                    }
                     break;
                 case "2":
                     System.out.println("Insert your Username: ");

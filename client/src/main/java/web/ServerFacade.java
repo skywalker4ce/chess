@@ -1,11 +1,14 @@
 package web;
 
 import com.google.gson.Gson;
+import model.AuthData;
 import model.UserData;
 import request.CreateGameRequest;
 import request.JoinGameRequest;
 import request.LoginRequest;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -26,8 +29,9 @@ public class ServerFacade {
         String requestType = "POST";
         LoginRequest user = new LoginRequest(username, password);
         var jsonUser = new Gson().toJson(user);
-        connector.connect(uri, requestType, null, jsonUser);
-        return null;
+        InputStreamReader httpString = connector.connect(uri, requestType, null, jsonUser);
+        AuthData classObject = new Gson().fromJson(httpString, AuthData.class);
+        return classObject.authToken();
     }
 
     public String logout(String authToken) throws Exception {
