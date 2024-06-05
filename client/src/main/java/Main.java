@@ -1,4 +1,5 @@
 import chess.*;
+import web.ServerFacade;
 
 import java.util.Objects;
 import java.util.Scanner;
@@ -7,7 +8,9 @@ import static ui.EscapeSequences.RESET_TEXT_BOLD_FAINT;
 import static ui.EscapeSequences.SET_TEXT_BOLD;
 
 public class Main {
-    public static void main(String[] args) {
+    static ServerFacade facade = new ServerFacade();
+
+    public static void main(String[] args) throws Exception {
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         System.out.println("♕ 240 Chess Client: " + piece);
         for (int i = 0; i < 3; i++) {
@@ -22,7 +25,7 @@ public class Main {
         System.out.println("Come Back Soon!");
     }
 
-    private static void preLoginMenu(){
+    private static void preLoginMenu() throws Exception {
         Scanner scanner = new Scanner(System.in);
         menu:
         while (true){
@@ -40,7 +43,7 @@ public class Main {
                     String password = scanner.next();
                     System.out.println("Enter a valid Email: ");
                     String email = scanner.next();
-                    System.out.println("This is where you would make the request to register a user " + username + " " + password + " " + email);
+                    facade.register(username, password, email);
                     postLoginMenu();
                     break;
                 case "2":
