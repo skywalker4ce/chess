@@ -9,6 +9,7 @@ import static ui.EscapeSequences.SET_TEXT_BOLD;
 
 public class Main {
     static ServerFacade facade = new ServerFacade();
+    private String authToken;
 
     public static void main(String[] args) throws Exception {
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);

@@ -18,13 +18,14 @@ public class ServerConnector {
         http.setRequestMethod(requestType);
 
 
-        if (Objects.equals(requestType, "POST")) {
+        if (Objects.equals(requestType, "POST") || Objects.equals(requestType, "PUT")) {
             // Specify that we are going to write out data
             http.setDoOutput(true);
-            //header
-            if (header != null) {
-                http.addRequestProperty("Authorization", header);
-            }
+        }
+
+        //header
+        if (header != null) {
+            http.addRequestProperty("Authorization", header);
         }
 
         // Make the request
