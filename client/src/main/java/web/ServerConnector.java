@@ -38,13 +38,12 @@ public class ServerConnector {
         } else {
             InputStream responseBody = http.getErrorStream();
             if (responseBody != null) {
-                return null;
-//                InputStreamReader inputStreamReader = new InputStreamReader(responseBody);
-//                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-//                String line;
-//                while ((line = bufferedReader.readLine()) != null) {
-//                    System.out.println(line);
-//                }
+                if (!Objects.equals(requestType, "GET")) {
+                    return null;
+                }
+                else {
+                    return "Error";
+                }
             }
         }
         return null;
