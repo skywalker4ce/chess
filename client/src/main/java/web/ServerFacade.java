@@ -76,13 +76,12 @@ public class ServerFacade {
         }
     }
 
-    public void joinGame(String playerColor,int gameID, String authToken) throws Exception {
+    public String joinGame(String playerColor,int gameID, String authToken) throws Exception {
         URI uri = new URI("http://localhost:8080/game");
         String requestType = "PUT";
         JoinGameRequest game = new JoinGameRequest(playerColor, gameID);
         var jsonGame = new Gson().toJson(game);
-        connector.connect(uri, requestType, authToken, jsonGame);
-
+        return connector.connect(uri, requestType, authToken, jsonGame);
     }
 
     public void clear() throws Exception {

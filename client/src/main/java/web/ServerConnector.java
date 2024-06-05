@@ -38,7 +38,7 @@ public class ServerConnector {
         } else {
             InputStream responseBody = http.getErrorStream();
             if (responseBody != null) {
-                if (!Objects.equals(requestType, "GET")) {
+                if (!Objects.equals(requestType, "GET") || !Objects.equals(requestType, "PUT")) {
                     return null;
                 }
                 else {

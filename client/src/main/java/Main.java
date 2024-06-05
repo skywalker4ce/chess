@@ -1,5 +1,6 @@
 import chess.*;
 import model.GameData;
+import ui.DisplayBoard;
 import web.ServerFacade;
 
 import java.util.*;
@@ -34,7 +35,7 @@ public class Main {
             System.out.println("1. Register");
             System.out.println("2. Login");
             System.out.println("3. Quit");
-            System.out.println("4. Help \n");
+            System.out.println("4. Help");
             var input = scanner.next();
             switch (input) {
                 case "1":
@@ -101,7 +102,7 @@ public class Main {
             System.out.println("3. Observe a Game");
             System.out.println("4. Join a Game");
             System.out.println("5. Logout");
-            System.out.println("6. Help \n");
+            System.out.println("6. Help");
             var input = scanner.next();
             switch (input) {
                 case "1":
@@ -133,7 +134,20 @@ public class Main {
                     break;
                 case "4":
                     System.out.println("Enter the number of the game you would like to join: ");
-                    String gameNumberToJoin = scanner.next();
+                    int gameNumberToJoin = scanner.nextInt();
+                    System.out.println("Enter 'WHITE' or 'BLACK' to choose a color");
+                    String playerColor = scanner.next();
+                    if (gameNumberToJoin <= gameMap.size()){
+                        GameData game = gameMap.get(gameNumberToJoin);
+                        String response = facade.joinGame(playerColor, game.gameID(), authToken);
+                        if (!Objects.equals(response, "Error")){
+                            DisplayBoard board = new DisplayBoard();
+                            board.display(game.game().getBoard());
+                        }
+                        else {
+                            System.out.println(SET_BG_COLOR_RED+ "Color already taken. Choose another one or choose another game to join." + SET_TEXT_COLOR_WHITE);
+                        }
+                    }
                     System.out.println("This is where you would find the game, update it, and display the chessboard " + gameNumberToJoin);
                     break;
                 case "5":
