@@ -114,6 +114,8 @@ public class Main {
                     break;
                 case "2":
                     ArrayList<GameData> games = facade.listGames(authToken);
+                    gameMap = new TreeMap<>();
+                    i = 1;
                     if (games != null){
                         for (GameData game : games){
                             gameMap.put(i, game);
@@ -142,7 +144,7 @@ public class Main {
                         String response = facade.joinGame(playerColor, game.gameID(), authToken);
                         if (!Objects.equals(response, "Error")){
                             DisplayBoard board = new DisplayBoard();
-                            board.display(game.game().getBoard());
+                            board.display(game.game().getBoard(), "WHITE");
                         }
                         else {
                             System.out.println(SET_BG_COLOR_RED+ "Color already taken. Choose another one or choose another game to join." + SET_TEXT_COLOR_WHITE);
