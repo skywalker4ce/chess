@@ -8,7 +8,7 @@ import java.util.*;
 import static ui.EscapeSequences.*;
 
 public class Main {
-    static ServerFacade facade = new ServerFacade();
+    static ServerFacade facade = new ServerFacade(8080);
 
     public static void main(String[] args) throws Exception {
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);

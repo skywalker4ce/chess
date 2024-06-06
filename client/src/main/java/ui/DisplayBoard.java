@@ -6,9 +6,8 @@ import chess.ChessPosition;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Random;
+
 
 import static ui.EscapeSequences.*;
 
@@ -87,16 +86,7 @@ public class DisplayBoard {
     private void drawRowOfSquares(PrintStream out, int boardRow) {
         String[] sidersWhite = {"1", "2", "3", "4", "5", "6", "7", "8"};
         String[] sidersBlack = {"8", "7", "6", "5", "4", "3", "2", "1"};
-        playerColor(out);
-        out.print(EMPTY);
-        if (Objects.equals(color, "BLACK")) {
-            out.print(sidersWhite[--boardRow]);
-            boardRow++;
-        } else {
-            out.print(sidersWhite[--boardRow]);
-            boardRow++;
-        }
-        out.print(EMPTY);
+        boardRow = drawEdge(out, boardRow, sidersWhite);
 
         String squareColor;
         if (boardRow % 2 == 0) {
@@ -116,21 +106,25 @@ public class DisplayBoard {
             }
         }
 
-        playerColor(out);
-        out.print(EMPTY);
-        if (Objects.equals(color, "BLACK")){
-            out.print(sidersWhite[--boardRow]);
-            boardRow++;
-        }
-        else {
-            out.print(sidersWhite[--boardRow]);
-            boardRow++;
-        }
-        out.print(EMPTY);
+        boardRow = drawEdge(out, boardRow, sidersWhite);
 
         setOriginal(out);
 
         out.println();
+    }
+
+    private int drawEdge(PrintStream out, int boardRow, String[] sidersWhite) {
+        playerColor(out);
+        out.print(EMPTY);
+        if (Objects.equals(color, "BLACK")) {
+            out.print(sidersWhite[--boardRow]);
+            boardRow++;
+        } else {
+            out.print(sidersWhite[--boardRow]);
+            boardRow++;
+        }
+        out.print(EMPTY);
+        return boardRow;
     }
 
     private String makeBoard(PrintStream out, int boardRow, int boardCol, String squareColor) {
