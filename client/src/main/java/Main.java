@@ -131,13 +131,18 @@ public class Main {
                     break;
                 case "3":
                     System.out.println("Enter the number of the game you would like to observe: ");
-                    String gameNumber = scanner.next();
-                    System.out.println("This is where you would find the game and display the chessboard " + gameNumber);
+                    int gameNumber = scanner.nextInt();
+                    if (gameNumber <= gameMap.size()) {
+                        GameData game = gameMap.get(gameNumber);
+                        DisplayBoard board = new DisplayBoard();
+                        board.display(game.game().getBoard(), "WHITE");
+                        board.display(game.game().getBoard(), "BLACK");
+                    }
                     break;
                 case "4":
                     System.out.println("Enter the number of the game you would like to join: ");
                     int gameNumberToJoin = scanner.nextInt();
-                    System.out.println("Enter 'WHITE' or 'BLACK' to choose a color");
+                    System.out.println("Enter 'w' for WHITE or 'b' for BLACK to choose a color");
                     String playerColor = scanner.next();
                     if (gameNumberToJoin <= gameMap.size()){
                         GameData game = gameMap.get(gameNumberToJoin);
@@ -145,12 +150,12 @@ public class Main {
                         if (!Objects.equals(response, "Error")){
                             DisplayBoard board = new DisplayBoard();
                             board.display(game.game().getBoard(), "WHITE");
+                            board.display(game.game().getBoard(), "BLACK");
                         }
                         else {
                             System.out.println(SET_BG_COLOR_RED+ "Color already taken. Choose another one or choose another game to join." + SET_TEXT_COLOR_WHITE);
                         }
                     }
-                    System.out.println("This is where you would find the game, update it, and display the chessboard " + gameNumberToJoin);
                     break;
                 case "5":
                     facade.logout(authToken);
