@@ -46,7 +46,7 @@ public class Main {
                     System.out.println("Enter a valid Email: ");
                     String email = scanner.next();
                     if (username == null || password == null || email == null){
-                        System.out.println(SET_TEXT_COLOR_RED + "No fields can be blank. Please try again" + SET_TEXT_COLOR_WHITE);
+                        System.out.println(SET_TEXT_COLOR_RED + "No fields can be blank. Please try again" + RESET_TEXT_COLOR);
                     }
                     else {
                         authToken = facade.register(username, password, email);
@@ -54,7 +54,7 @@ public class Main {
                             postLoginMenu(authToken);
                         }
                         else {
-                            System.out.println(SET_TEXT_COLOR_RED + "Username already taken. Please choose another one." + SET_TEXT_COLOR_WHITE);
+                            System.out.println(SET_TEXT_COLOR_RED + "Username already taken. Please choose another one." + RESET_TEXT_COLOR);
                         }
                     }
                     break;
@@ -64,7 +64,7 @@ public class Main {
                     System.out.println("Insert your Password: ");
                     String loginPassword = scanner.next();
                     if (loginUsername == null || loginPassword == null){
-                        System.out.println(SET_TEXT_COLOR_RED + "No fields can be blank. Please try again" + SET_TEXT_COLOR_WHITE);
+                        System.out.println(SET_TEXT_COLOR_RED + "No fields can be blank. Please try again" + RESET_TEXT_COLOR);
                     }
                     else {
                         authToken = facade.login(loginUsername, loginPassword);
@@ -72,7 +72,7 @@ public class Main {
                             postLoginMenu(authToken);
                         }
                         else {
-                            System.out.println(SET_TEXT_COLOR_RED + "Username already taken. Please choose another one." + SET_TEXT_COLOR_WHITE);
+                            System.out.println(SET_TEXT_COLOR_RED + "Username already taken. Please choose another one." + RESET_TEXT_COLOR);
                         }
                     }
                     break;
@@ -84,7 +84,7 @@ public class Main {
                     System.out.println("Type '3' to exit the program \n");
                     break;
                 default:
-                    System.out.println(SET_BG_COLOR_RED + "Invalid input" + SET_TEXT_COLOR_WHITE);
+                    System.out.println(SET_TEXT_COLOR_RED + "Invalid input" + RESET_TEXT_COLOR);
                     break;
             }
         }
@@ -109,7 +109,7 @@ public class Main {
                     System.out.println("Enter a name for the game: ");
                     String gameName = scanner.next();
                      if (!facade.createGame(gameName, authToken)){
-                         System.out.println(SET_BG_COLOR_RED + "Error: Couldn't create the game. Try Again" + SET_TEXT_COLOR_WHITE);
+                         System.out.println(SET_TEXT_COLOR_RED + "Error: Couldn't create the game. Try Again" + RESET_TEXT_COLOR);
                      }
                     break;
                 case "2":
@@ -126,7 +126,7 @@ public class Main {
                         }
                     }
                     else {
-                        System.out.println(SET_BG_COLOR_BLUE + "No Active Games" + SET_TEXT_COLOR_WHITE);
+                        System.out.println(SET_TEXT_COLOR_BLUE + "No Active Games" + RESET_TEXT_COLOR);
                     }
                     break;
                 case "3":
@@ -142,10 +142,28 @@ public class Main {
                 case "4":
                     System.out.println("Enter the number of the game you would like to join: ");
                     int gameNumberToJoin = scanner.nextInt();
+                    if (gameNumberToJoin < 1 || gameNumberToJoin > gameMap.size()){
+                        System.out.println(SET_TEXT_COLOR_RED + "Invalid Game number. Try again." + RESET_TEXT_COLOR);
+                    }
                     System.out.println("Enter 'w' for WHITE or 'b' for BLACK to choose a color");
                     String playerColor = scanner.next();
+                    if (Objects.equals(playerColor, "w")){
+                        playerColor = "WHITE";
+                    }
+                    else if (Objects.equals(playerColor, "b")){
+                        playerColor = "BLACK";
+                    }
+                    else {
+                        System.out.println(SET_TEXT_COLOR_RED + "Invalid Color" + RESET_TEXT_COLOR);
+                        break;
+                    }
                     if (gameNumberToJoin <= gameMap.size()){
                         GameData game = gameMap.get(gameNumberToJoin);
+                        if ((playerColor.equals("WHITE") && game.whiteUsername() != null) ||
+                                (playerColor.equals("BLACK") && game.blackUsername() != null)){
+                            System.out.println(SET_TEXT_COLOR_RED + "Color already Taken" + RESET_TEXT_COLOR);
+                            break;
+                        }
                         String response = facade.joinGame(playerColor, game.gameID(), authToken);
                         if (!Objects.equals(response, "Error")){
                             DisplayBoard board = new DisplayBoard();
@@ -153,7 +171,7 @@ public class Main {
                             board.display(game.game().getBoard(), "BLACK");
                         }
                         else {
-                            System.out.println(SET_BG_COLOR_RED+ "Color already taken. Choose another one or choose another game to join." + SET_TEXT_COLOR_WHITE);
+                            System.out.println(SET_TEXT_COLOR_RED+ "Color already taken. Choose another one or choose another game to join." + RESET_TEXT_COLOR);
                         }
                     }
                     break;
