@@ -23,8 +23,8 @@ public class DisplayBoard {
 
 
     public void display(ChessBoard board, String color) {
-        this.color = color;
         this.board = board;
+        this.color = color;
 
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(ERASE_SCREEN);
@@ -71,7 +71,7 @@ public class DisplayBoard {
 
     private void drawChessBoard(PrintStream out) {
 
-        if (Objects.equals(color, "BLACK")) {
+        if (Objects.equals(color, "WHITE")) {
             for (int boardRow = 1; boardRow < BOARD_SIZE_IN_SQUARES + 1; ++boardRow) {
                 drawRowOfSquares(out, boardRow);
             }
@@ -86,10 +86,10 @@ public class DisplayBoard {
     private void drawRowOfSquares(PrintStream out, int boardRow) {
         String[] sidersWhite = {"1", "2", "3", "4", "5", "6", "7", "8"};
         String[] sidersBlack = {"8", "7", "6", "5", "4", "3", "2", "1"};
-        boardRow = drawEdge(out, boardRow, sidersWhite);
+        boardRow = drawEdge(out, boardRow, sidersBlack);
 
         String squareColor;
-        if (Objects.equals(color, "WHITE")) {
+        if (Objects.equals(color, "BLACK")) {
             if (boardRow % 2 == 0) {
                 squareColor = SET_BG_COLOR_WHITE;
             } else {
@@ -125,7 +125,7 @@ public class DisplayBoard {
     private int drawEdge(PrintStream out, int boardRow, String[] sidersWhite) {
         playerColor(out);
         out.print(EMPTY);
-        if (Objects.equals(color, "BLACK")) {
+        if (Objects.equals(color, "WHITE")) {
             out.print(sidersWhite[--boardRow]);
             boardRow++;
         } else {
