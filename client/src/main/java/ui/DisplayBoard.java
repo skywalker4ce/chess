@@ -165,27 +165,6 @@ public class DisplayBoard {
         return squareColor;
     }
 
-    private void reverse2DArray(ChessPiece[][] array) {
-        int rowCount = array.length;
-        int colCount = array[0].length;
-
-        // Reverse rows
-        for (int i = 0; i < rowCount / 2; i++) {
-            ChessPiece[] temp = array[i];
-            array[i] = array[rowCount - 1 - i];
-            array[rowCount - 1 - i] = temp;
-        }
-
-        // Reverse elements within each row
-        for (ChessPiece[] row : array) {
-            for (int i = 0; i < colCount / 2; i++) {
-                ChessPiece temp = row[i];
-                row[i] = row[colCount - 1 - i];
-                row[colCount - 1 - i] = temp;
-            }
-        }
-    }
-
     private void playerColor(PrintStream out) {
         if (Objects.equals(color, "WHITE")) {
             setWhiteBorder(out);

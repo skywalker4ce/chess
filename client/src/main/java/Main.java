@@ -159,8 +159,7 @@ public class Main {
                     }
                     if (gameNumberToJoin <= gameMap.size()){
                         GameData game = gameMap.get(gameNumberToJoin);
-                        if ((playerColor.equals("WHITE") && game.whiteUsername() != null) ||
-                                (playerColor.equals("BLACK") && game.blackUsername() != null)){
+                        if ((playerColor.equals("WHITE") && game.whiteUsername() != null) || (playerColor.equals("BLACK") && game.blackUsername() != null)){
                             System.out.println(SET_TEXT_COLOR_RED + "Color already Taken" + RESET_TEXT_COLOR);
                             break;
                         }
