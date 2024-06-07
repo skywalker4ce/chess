@@ -54,7 +54,9 @@ public class ServerFacade {
     public void logout(String authToken) throws Exception {
         URI uri = new URI("http://localhost:" + port + "/session");
         String requestType = "DELETE";
-        connector.connect(uri, requestType, authToken, null);
+        if (connector.connect(uri, requestType, authToken, null) == null){
+            throw new Exception("AuthToken error");
+        }
     }
 
     public Boolean createGame(String gameName, String authToken) throws Exception {
@@ -72,10 +74,15 @@ public class ServerFacade {
         String responseString = connector.connect(uri, requestType, authToken, null);
         if (!Objects.equals(responseString, "Error")){
             ListGamesResult list = new Gson().fromJson(responseString, ListGamesResult.class);
-            return list.games();
+            if (list != null) {
+                return list.games();
+            }
+            else {
+                return null;
+            }
         }
         else{
-            return null;
+            throw new Exception("AuthToken Error");
         }
     }
 

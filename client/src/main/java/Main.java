@@ -116,7 +116,7 @@ public class Main {
                     ArrayList<GameData> games = facade.listGames(authToken);
                     gameMap = new TreeMap<>();
                     i = 1;
-                    if (games != null){
+                    if (!games.isEmpty()){
                         for (GameData game : games){
                             gameMap.put(i, game);
                             i++;
