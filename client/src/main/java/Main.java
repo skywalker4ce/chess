@@ -113,21 +113,7 @@ public class Main {
                      }
                     break;
                 case "2":
-                    ArrayList<GameData> games = facade.listGames(authToken);
-                    gameMap = new TreeMap<>();
-                    i = 1;
-                    if (!games.isEmpty()){
-                        for (GameData game : games){
-                            gameMap.put(i, game);
-                            i++;
-                        }
-                        for (Map.Entry<Integer, GameData> entry : gameMap.entrySet()) {
-                            System.out.println(entry.getKey() + ". " + entry.getValue());
-                        }
-                    }
-                    else {
-                        System.out.println(SET_TEXT_COLOR_BLUE + "No Active Games" + RESET_TEXT_COLOR);
-                    }
+                    gameMap = case2(authToken);
                     break;
                 case "3":
                     System.out.println("Enter the number of the game you would like to observe: ");
@@ -189,5 +175,27 @@ public class Main {
                     break;
             }
         }
+    }
+
+    private static Map<Integer, GameData> case2(String authToken) throws Exception {
+        int i;
+        Map<Integer, GameData> gameMap;
+        ArrayList<GameData> games = facade.listGames(authToken);
+        gameMap = new TreeMap<>();
+        i = 1;
+        if (!games.isEmpty()){
+            for (GameData game : games){
+                gameMap.put(i, game);
+                i++;
+            }
+            for (Map.Entry<Integer, GameData> entry : gameMap.entrySet()) {
+                System.out.println(entry.getKey() + ". GameName: " + entry.getValue().gameName() + "| WhitePlayer: " +
+                        entry.getValue().whiteUsername() + "| BlackPlayer: " + entry.getValue().blackUsername());
+            }
+        }
+        else {
+            System.out.println(SET_TEXT_COLOR_BLUE + "No Active Games" + RESET_TEXT_COLOR);
+        }
+        return gameMap;
     }
 }

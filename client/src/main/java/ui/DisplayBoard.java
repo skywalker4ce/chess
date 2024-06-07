@@ -89,10 +89,19 @@ public class DisplayBoard {
         boardRow = drawEdge(out, boardRow, sidersWhite);
 
         String squareColor;
-        if (boardRow % 2 == 0) {
-            squareColor = SET_BG_COLOR_WHITE;
-        } else {
-            squareColor = SET_BG_COLOR_BLACK;
+        if (Objects.equals(color, "WHITE")) {
+            if (boardRow % 2 == 0) {
+                squareColor = SET_BG_COLOR_WHITE;
+            } else {
+                squareColor = SET_BG_COLOR_BLACK;
+            }
+        }
+        else {
+            if (boardRow % 2 != 0) {
+                squareColor = SET_BG_COLOR_WHITE;
+            } else {
+                squareColor = SET_BG_COLOR_BLACK;
+            }
         }
 
         if (Objects.equals(color, "BLACK")){
