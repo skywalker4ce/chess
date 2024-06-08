@@ -17,6 +17,11 @@ public class ChessPosition {
         this.col = col - 1;
     }
 
+    public ChessPosition(char row, int col){
+        this.row = row - 'a';
+        this.col = col - 1;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

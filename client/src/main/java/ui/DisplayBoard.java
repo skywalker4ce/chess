@@ -16,7 +16,6 @@ public class DisplayBoard {
 
     private static final int BOARD_SIZE_IN_SQUARES = 8;
     private static final int SQUARE_SIZE_IN_CHARS = 1;
-    private static final int LINE_WIDTH_IN_CHARS = 1;
     private static final String EMPTY = " ";
     private String color;
     private ChessBoard board;
@@ -85,7 +84,6 @@ public class DisplayBoard {
 
     private void drawRowOfSquares(PrintStream out, int boardRow) {
         String[] sidersWhite = {"1", "2", "3", "4", "5", "6", "7", "8"};
-        String[] sidersBlack = {"8", "7", "6", "5", "4", "3", "2", "1"};
         boardRow = drawEdge(out, boardRow, sidersWhite);
 
         String squareColor;
