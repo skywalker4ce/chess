@@ -175,8 +175,8 @@ public class Main {
             if (gameNumber <= gameMap.size()) {
                 GameData game = gameMap.get(gameNumber);
                 DisplayBoard board = new DisplayBoard();
-                board.display(game.game().getBoard(), "WHITE");
-                board.display(game.game().getBoard(), "BLACK");
+                board.display(game.game().getBoard(), "WHITE", null, null);
+                board.display(game.game().getBoard(), "BLACK", null, null);
             }
         }
         catch (Exception e) {
@@ -213,8 +213,8 @@ public class Main {
                 String response = facade.joinGame(playerColor, game.gameID(), authToken);
                 if (!Objects.equals(response, "Error")){
                     DisplayBoard board = new DisplayBoard();
-                    board.display(game.game().getBoard(), "WHITE");
-                    board.display(game.game().getBoard(), "BLACK");
+                    board.display(game.game().getBoard(), "WHITE", null, null);
+                    board.display(game.game().getBoard(), "BLACK", null, null);
                 }
                 else {
                     System.out.println(SET_TEXT_COLOR_RED+ "Color already taken. Choose another one or choose another game to join." + RESET_TEXT_COLOR);

@@ -1,11 +1,9 @@
 package ui;
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.Objects;
 
 
@@ -19,11 +17,15 @@ public class DisplayBoard {
     private static final String EMPTY = " ";
     private String color;
     private ChessBoard board;
+    private Collection<ChessMove> validMoves;
+    ChessPosition currentPosition;
 
 
-    public void display(ChessBoard board, String color) {
+    public void display(ChessBoard board, String color, Collection<ChessMove> validMoves, ChessPosition currentPosition) {
         this.board = board;
         this.color = color;
+        this.validMoves = validMoves;
+        this.currentPosition = currentPosition;
 
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(ERASE_SCREEN);
@@ -135,7 +137,16 @@ public class DisplayBoard {
     }
 
     private String makeBoard(PrintStream out, int boardRow, int boardCol, String squareColor) {
-        ChessPiece piece = board.getPiece(new ChessPosition(boardRow, boardCol));
+        ChessPosition position = new ChessPosition(boardRow, boardCol);
+        ChessPiece piece = board.getPiece(position);
+        Boolean partOfValidMoves = false;
+
+        for (ChessMove move: validMoves){
+            if (move.getEndPosition().equals(position)){
+                partOfValidMoves = true;
+                break;
+            }
+        }
 
         if (piece != null){
             String pieceRepresentation;
@@ -154,13 +165,40 @@ public class DisplayBoard {
                 case ROOK -> "R";
             };
 
-            out.print(squareColor + EMPTY);
-            out.print(squareColor + pieceRepresentation);
-            out.print(squareColor + EMPTY);
+            if (position.equals(currentPosition)){
+                out.print(SET_BG_COLOR_RED + EMPTY);
+                out.print(pieceRepresentation);
+                out.print(EMPTY + squareColor);
+            }
+            else {
+                if (partOfValidMoves && Objects.equals(squareColor, SET_BG_COLOR_BLACK)){
+                    out.print(SET_BG_COLOR_DARK_GREEN + EMPTY);
+                    out.print(pieceRepresentation);
+                    out.print(EMPTY + squareColor);
+                }
+                else if (partOfValidMoves && Objects.equals(squareColor, SET_BG_COLOR_WHITE)){
+                    out.print(SET_BG_COLOR_GREEN + EMPTY);
+                    out.print(pieceRepresentation);
+                    out.print(EMPTY + squareColor);
+                }
+                else {
+                    out.print(squareColor + EMPTY);
+                    out.print(squareColor + pieceRepresentation);
+                    out.print(squareColor + EMPTY);
+                }
+            }
 
         }
         else {
-            out.print(squareColor + EMPTY.repeat(3));
+            if (partOfValidMoves && Objects.equals(squareColor, SET_BG_COLOR_BLACK)){
+                out.print(SET_BG_COLOR_DARK_GREEN + EMPTY.repeat(3) + squareColor);
+            }
+            else if (partOfValidMoves && Objects.equals(squareColor, SET_BG_COLOR_WHITE)){
+                out.print(SET_BG_COLOR_GREEN + EMPTY.repeat(3) + squareColor);
+            }
+            else {
+                out.print(squareColor + EMPTY.repeat(3));
+            }
         }
 
         if (squareColor.equals(SET_BG_COLOR_WHITE)){

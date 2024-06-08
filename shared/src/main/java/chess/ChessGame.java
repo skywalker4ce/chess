@@ -11,7 +11,6 @@ import java.util.Collection;
  */
 public class ChessGame {
     private ChessBoard gameboard = new ChessBoard();
-    //private ChessBoard clonedBoard = gameboard.clone();
     private TeamColor team = TeamColor.WHITE;
     private Boolean makeMoveBoolean = false;                                 // this may need to change from a private variable
 
@@ -72,7 +71,7 @@ public class ChessGame {
             if (!isInCheck(piece.getTeamColor())){
                 updatedMoves.add(move);
             }
-            gameboard = clonedBoard.clone();
+            this.gameboard = clonedBoard.clone();
         }
         allMoves = updatedMoves;
         makeMoveBoolean = false;

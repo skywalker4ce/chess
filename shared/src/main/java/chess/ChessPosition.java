@@ -18,8 +18,8 @@ public class ChessPosition {
     }
 
     public ChessPosition(char row, int col){
-        this.row = row - 'a';
-        this.col = col - 1;
+        this.row = col - 1;
+        this.col = row - 'a';
     }
 
     @Override
