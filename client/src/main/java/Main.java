@@ -117,47 +117,59 @@ public class Main {
                     break;
                 case "3":
                     System.out.println("Enter the number of the game you would like to observe: ");
-                    int gameNumber = scanner.nextInt();
-                    if (gameNumber <= gameMap.size()) {
-                        GameData game = gameMap.get(gameNumber);
-                        DisplayBoard board = new DisplayBoard();
-                        board.display(game.game().getBoard(), "WHITE");
-                        board.display(game.game().getBoard(), "BLACK");
-                    }
-                    break;
-                case "4":
-                    System.out.println("Enter the number of the game you would like to join: ");
-                    int gameNumberToJoin = scanner.nextInt();
-                    if (gameNumberToJoin < 1 || gameNumberToJoin > gameMap.size()){
-                        System.out.println(SET_TEXT_COLOR_RED + "Invalid Game number. Try again." + RESET_TEXT_COLOR);
-                    }
-                    System.out.println("Enter 'w' for WHITE or 'b' for BLACK to choose a color");
-                    String playerColor = scanner.next();
-                    if (Objects.equals(playerColor, "w")){
-                        playerColor = "WHITE";
-                    }
-                    else if (Objects.equals(playerColor, "b")){
-                        playerColor = "BLACK";
-                    }
-                    else {
-                        System.out.println(SET_TEXT_COLOR_RED + "Invalid Color" + RESET_TEXT_COLOR);
-                        break;
-                    }
-                    if (gameNumberToJoin <= gameMap.size()){
-                        GameData game = gameMap.get(gameNumberToJoin);
-                        if ((playerColor.equals("WHITE") && game.whiteUsername() != null) || (playerColor.equals("BLACK") && game.blackUsername() != null)){
-                            System.out.println(SET_TEXT_COLOR_RED + "Color already Taken" + RESET_TEXT_COLOR);
-                            break;
-                        }
-                        String response = facade.joinGame(playerColor, game.gameID(), authToken);
-                        if (!Objects.equals(response, "Error")){
+                    try {
+                        int gameNumber = scanner.nextInt();
+                        if (gameNumber <= gameMap.size()) {
+                            GameData game = gameMap.get(gameNumber);
                             DisplayBoard board = new DisplayBoard();
                             board.display(game.game().getBoard(), "WHITE");
                             board.display(game.game().getBoard(), "BLACK");
                         }
-                        else {
-                            System.out.println(SET_TEXT_COLOR_RED+ "Color already taken. Choose another one or choose another game to join." + RESET_TEXT_COLOR);
+                    }
+                    catch (Exception e) {
+                        System.out.println(SET_TEXT_COLOR_RED + "Please enter a number." + RESET_TEXT_COLOR);
+                        break;
+                    }
+                    break;
+                case "4":
+                    System.out.println("Enter the number of the game you would like to join: ");
+                    try {
+                        int gameNumberToJoin = scanner.nextInt();
+                        if (gameNumberToJoin < 1 || gameNumberToJoin > gameMap.size()) {
+                            System.out.println(SET_TEXT_COLOR_RED + "Invalid Game number. Try again." + RESET_TEXT_COLOR);
                         }
+                        System.out.println("Enter 'w' for WHITE or 'b' for BLACK to choose a color");
+                        String playerColor = scanner.next();
+                        if (Objects.equals(playerColor, "w")){
+                            playerColor = "WHITE";
+                        }
+                        else if (Objects.equals(playerColor, "b")){
+                            playerColor = "BLACK";
+                        }
+                        else {
+                            System.out.println(SET_TEXT_COLOR_RED + "Invalid Color" + RESET_TEXT_COLOR);
+                            break;
+                        }
+                        if (gameNumberToJoin <= gameMap.size()){
+                            GameData game = gameMap.get(gameNumberToJoin);
+                            if ((playerColor.equals("WHITE") && game.whiteUsername() != null) || (playerColor.equals("BLACK") && game.blackUsername() != null)){
+                                System.out.println(SET_TEXT_COLOR_RED + "Color already Taken" + RESET_TEXT_COLOR);
+                                break;
+                            }
+                            String response = facade.joinGame(playerColor, game.gameID(), authToken);
+                            if (!Objects.equals(response, "Error")){
+                                DisplayBoard board = new DisplayBoard();
+                                board.display(game.game().getBoard(), "WHITE");
+                                board.display(game.game().getBoard(), "BLACK");
+                            }
+                            else {
+                                System.out.println(SET_TEXT_COLOR_RED+ "Color already taken. Choose another one or choose another game to join." + RESET_TEXT_COLOR);
+                            }
+                        }
+                    }
+                    catch (Exception e) {
+                        System.out.println(SET_TEXT_COLOR_RED + "Please enter a number." + RESET_TEXT_COLOR);
+                        break;
                     }
                     break;
                 case "5":

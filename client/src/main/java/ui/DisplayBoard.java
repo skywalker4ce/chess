@@ -71,7 +71,7 @@ public class DisplayBoard {
 
     private void drawChessBoard(PrintStream out) {
 
-        if (Objects.equals(color, "WHITE")) {
+        if (Objects.equals(color, "BLACK")) {
             for (int boardRow = 1; boardRow < BOARD_SIZE_IN_SQUARES + 1; ++boardRow) {
                 drawRowOfSquares(out, boardRow);
             }
@@ -86,10 +86,10 @@ public class DisplayBoard {
     private void drawRowOfSquares(PrintStream out, int boardRow) {
         String[] sidersWhite = {"1", "2", "3", "4", "5", "6", "7", "8"};
         String[] sidersBlack = {"8", "7", "6", "5", "4", "3", "2", "1"};
-        boardRow = drawEdge(out, boardRow, sidersBlack);
+        boardRow = drawEdge(out, boardRow, sidersWhite);
 
         String squareColor;
-        if (Objects.equals(color, "BLACK")) {
+        if (Objects.equals(color, "WHITE")) {
             if (boardRow % 2 == 0) {
                 squareColor = SET_BG_COLOR_WHITE;
             } else {
@@ -104,7 +104,7 @@ public class DisplayBoard {
             }
         }
 
-        if (Objects.equals(color, "BLACK")){
+        if (Objects.equals(color, "WHITE")){
             for (int boardCol = 1; boardCol < BOARD_SIZE_IN_SQUARES + 1; ++boardCol) {
                 squareColor = makeBoard(out, boardRow, boardCol, squareColor);
             }
