@@ -8,6 +8,7 @@ import request.CreateGameRequest;
 import request.JoinGameRequest;
 import request.LoginRequest;
 import result.ListGamesResult;
+import websocket.commands.ConnectCommand;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -85,7 +86,7 @@ public class ServerFacade {
         }
     }
 
-    public String joinGame(String playerColor,int gameID, String authToken) throws Exception {
+    public String joinGame(String playerColor, int gameID, String authToken) throws Exception {
         URI uri = new URI("http://localhost:" + port + "/game");
         String requestType = "PUT";
         JoinGameRequest game = new JoinGameRequest(playerColor, gameID);
@@ -97,5 +98,12 @@ public class ServerFacade {
         URI uri = new URI("http://localhost:" + port + "/db");
         String requestType = "DELETE";
         connector.connect(uri, requestType, null, null);
+    }
+
+    public void connect(String authToken, int gameID) throws Exception {
+        WebSocketCommunicator communicator = new WebSocketCommunicator(port);
+        ConnectCommand connect = new ConnectCommand(authToken, gameID);
+        var jsonConnect = new Gson().toJson(connect);
+        communicator.send(jsonConnect);
     }
 }

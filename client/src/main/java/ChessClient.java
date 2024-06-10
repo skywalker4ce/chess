@@ -3,6 +3,8 @@ import model.GameData;
 import ui.DisplayBoard;
 import web.ServerFacade;
 import web.ServerMessageObserver;
+import web.WebSocketCommunicator;
+import websocket.commands.ConnectCommand;
 import websocket.messages.ServerMessage;
 
 import java.util.*;
@@ -254,6 +256,7 @@ public class ChessClient implements ServerMessageObserver {
                 }
                 String response = facade.joinGame(playerColor, game.gameID(), authToken);
                 if (!Objects.equals(response, "Error")){
+                    facade.connect(authToken, game.gameID());
                     gameMenu();
                 }
                 else {

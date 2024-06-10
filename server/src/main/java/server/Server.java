@@ -1,18 +1,21 @@
 package server;
 
 import dataaccess.DataAccessException;
+import server.WebSocket.WebSocketHandler;
 import service.UnauthorizedException;
 import spark.*;
 
 import static dataaccess.DatabaseManager.createDatabase;
 import static dataaccess.DatabaseManager.createTables;
 
-public class Server {
 
+public class Server {
+    private final WebSocketHandler webSocketHandler = new WebSocketHandler();
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 
+        Spark.webSocket("/ws", webSocketHandler);
         Spark.staticFiles.location("web");
         try {
             createDatabase();
