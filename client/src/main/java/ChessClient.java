@@ -218,9 +218,7 @@ public class ChessClient implements ServerMessageObserver {
             int gameNumber = scanner.nextInt();
             if (gameNumber <= gameMap.size()) {
                 GameData game = gameMap.get(gameNumber);
-                DisplayBoard board = new DisplayBoard();
-                board.display(game.game().getBoard(), "WHITE", null, null);
-                board.display(game.game().getBoard(), "BLACK", null, null);
+                gameMenu();
             }
         }
         catch (Exception e) {
@@ -256,9 +254,7 @@ public class ChessClient implements ServerMessageObserver {
                 }
                 String response = facade.joinGame(playerColor, game.gameID(), authToken);
                 if (!Objects.equals(response, "Error")){
-                    DisplayBoard board = new DisplayBoard();
-                    board.display(game.game().getBoard(), "WHITE", null, null);
-                    board.display(game.game().getBoard(), "BLACK", null, null);
+                    gameMenu();
                 }
                 else {
                     System.out.println(SET_TEXT_COLOR_RED+ "Color already taken. Choose another one or choose another game to join." + RESET_TEXT_COLOR);
