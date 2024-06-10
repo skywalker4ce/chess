@@ -139,12 +139,14 @@ public class DisplayBoard {
     private String makeBoard(PrintStream out, int boardRow, int boardCol, String squareColor) {
         ChessPosition position = new ChessPosition(boardRow, boardCol);
         ChessPiece piece = board.getPiece(position);
-        Boolean partOfValidMoves = false;
+        boolean partOfValidMoves = false;
 
-        for (ChessMove move: validMoves){
-            if (move.getEndPosition().equals(position)){
-                partOfValidMoves = true;
-                break;
+        if (validMoves != null) {
+            for (ChessMove move : validMoves) {
+                if (move.getEndPosition().equals(position)) {
+                    partOfValidMoves = true;
+                    break;
+                }
             }
         }
 

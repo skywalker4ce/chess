@@ -14,12 +14,11 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class ServerFacade {
-    private ServerConnector connector = new ServerConnector();
+    private HttpCommunicator connector = new HttpCommunicator();
     int port;
 
     public ServerFacade(int port){
         this.port = port;
-
     }
 
     public String register(String username, String password, String email) throws Exception {

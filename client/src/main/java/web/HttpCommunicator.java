@@ -11,7 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.Objects;
 
-public class ServerConnector {
+public class HttpCommunicator {
 
     public String connect(URI uri, String requestType, String header, String body) throws Exception {
         HttpURLConnection http = getHttpURLConnection(uri, requestType, header);

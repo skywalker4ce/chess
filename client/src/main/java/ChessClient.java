@@ -2,12 +2,14 @@ import chess.*;
 import model.GameData;
 import ui.DisplayBoard;
 import web.ServerFacade;
+import web.ServerMessageObserver;
+import websocket.messages.ServerMessage;
 
 import java.util.*;
 
 import static ui.EscapeSequences.*;
 
-public class Main {
+public class ChessClient implements ServerMessageObserver {
     static ServerFacade facade = new ServerFacade(8080);
 
     public static void main(String[] args) throws Exception {
@@ -23,6 +25,11 @@ public class Main {
             }
         }
         System.out.println("Come Back Soon!");
+    }
+
+    @Override
+    public void notify(ServerMessage message){
+
     }
 
     private static void preLoginMenu() throws Exception {
@@ -126,6 +133,43 @@ public class Main {
                     System.out.println("Type '3' to watch an active game");
                     System.out.println("Type '4' to join an active game");
                     System.out.println("Type '5' to logout \n");
+                    break;
+                default:
+                    System.out.println("Invalid input");
+                    break;
+            }
+        }
+    }
+
+
+    private static void gameMenu() {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println(SET_TEXT_BOLD + "Enter a number (1-6) to continue:" + RESET_TEXT_BOLD_FAINT);
+            System.out.println("1. Make a Move");
+            System.out.println("2. Highlight Legal Moves");
+            System.out.println("3. Redraw the Chess Board");
+            System.out.println("4. Resign");
+            System.out.println("5. Leave");
+            System.out.println("6. Help");
+            var input = scanner.next();
+            switch (input) {
+                case "1":
+                    break;
+                case "2":
+                    break;
+                case "3":
+                    break;
+                case "4":
+                    break;
+                case "5":
+                    break;
+                case "6":
+                    System.out.println("Type '1' to make a move. Player will type the position of a piece to move and where they want to move it.");
+                    System.out.println("Type '2' to highlight all the legal moves of the specified piece");
+                    System.out.println("Type '3' to redraw the chess board");
+                    System.out.println("Type '4' to resign from the game");
+                    System.out.println("Type '5' to leave the game \n");
                     break;
                 default:
                     System.out.println("Invalid input");
