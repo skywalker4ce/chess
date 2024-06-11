@@ -13,8 +13,10 @@ public class WebSocketHandler {
 
     @OnWebSocketMessage
     public void onMessage(Session session, String msg) throws Exception {
-//        try {
-//            UserGameCommand command = Serializer.fromJson(message, UserGameCommand.class);
+        System.out.println("Made it here");
+//        try{
+//
+//            UserGameCommand command = Serializer.fromJson(msg, UserGameCommand.class);
 //
 //            String username = getUsername(command.getAuthString());
 //
