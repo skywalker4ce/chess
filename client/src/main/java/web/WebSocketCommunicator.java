@@ -1,12 +1,12 @@
 package web;
 
 
-import org.glassfish.tyrus.core.wsadl.model.Endpoint;
 
 import javax.websocket.*;
+import java.io.IOException;
 import java.net.URI;
 
-@ClientEndpoint
+
 public class WebSocketCommunicator extends Endpoint {
     private Session session;
 
@@ -27,7 +27,12 @@ public class WebSocketCommunicator extends Endpoint {
     }
 
     public void onOpen(Session session, EndpointConfig endpointConfig) {
-        this.session = session;
-        System.out.println("Connected to server");
+        //this.session = session;
+        System.out.println("Server Connected");
+        try {
+            this.session.getBasicRemote().sendText("Help");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -10,11 +10,12 @@ import static dataaccess.DatabaseManager.createTables;
 
 
 public class Server {
+    WebSocketHandler webSocketHandler = new WebSocketHandler();
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 
-        Spark.webSocket("/ws", WebSocketHandler.class);
+        Spark.webSocket("/ws", webSocketHandler);
         Spark.staticFiles.location("web");
         try {
             createDatabase();

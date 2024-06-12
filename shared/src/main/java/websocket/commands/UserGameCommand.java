@@ -9,10 +9,14 @@ import java.util.Objects;
  * methods.
  */
 public class UserGameCommand {
+    int gameID;
 
-    public UserGameCommand(String authToken) {
+    public UserGameCommand(String authToken, int gameID) {
         this.authToken = authToken;
+        this.gameID = gameID;
     }
+
+
 
     public enum CommandType {
         CONNECT,
@@ -27,6 +31,10 @@ public class UserGameCommand {
 
     public String getAuthString() {
         return authToken;
+    }
+
+    public int getGameID() {
+        return gameID;
     }
 
     public CommandType getCommandType() {

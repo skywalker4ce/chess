@@ -265,7 +265,8 @@ public class ChessClient implements ServerMessageObserver {
             }
         }
         catch (Exception e) {
-            System.out.println(SET_TEXT_COLOR_RED + "Please enter a number." + RESET_TEXT_COLOR);
+            //System.out.println(SET_TEXT_COLOR_RED + "Please enter a number." + RESET_TEXT_COLOR);
+            System.out.println(SET_TEXT_COLOR_RED + e.getMessage() + RESET_TEXT_COLOR);
             return;
         }
     }
