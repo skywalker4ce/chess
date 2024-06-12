@@ -1,5 +1,7 @@
 package server.WebSocket;
 
+import chess.ChessMove;
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dataaccess.*;
@@ -16,10 +18,7 @@ import websocket.messages.NotificationMessage;
 
 import java.io.EOFException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 @WebSocket
@@ -72,17 +71,44 @@ public class WebSocketHandler{
         else {
             title = "OBSERVER";
         }
+        String notification = username + " joined the game as " + title;
         Set<Session> tempSet = connections.get(command.getGameID());
         for (Session tempSession : tempSet){
             if (!tempSession.equals(session)){
-                String notification = username + " joined the game as " + title;
                 sendNotification(tempSession, new NotificationMessage(notification));
             }
         }
     }
 
-    private void makeMove(Session session, String username, MakeMoveCommand command){
+    private void makeMove(Session session, String username, MakeMoveCommand command) throws Exception {
+        GameData game = new SQLGameDAO().getGame(command.getGameID());
+        if (game == null){
+            throw new Exception("Invalid Game ID");
+        }
+        try {
+            //VALIDATE and MAKE_MOVE
+            game.game().makeMove(command.getMove());
+            game = new SQLGameDAO().getGame(command.getGameID());
 
+            //LOAD_GAME
+            LoadGameMessage loadGame = new LoadGameMessage(game);
+            var jsonLoadGame = new Gson().toJson(loadGame);
+            String location = "Input move here";
+            String notification = username + " moved to " + location;
+            Set<Session> tempSet = connections.get(command.getGameID());
+            for (Session tempSession : tempSet){
+                tempSession.getRemote().sendString(jsonLoadGame);
+                if (!tempSession.equals(session)){
+                    sendNotification(tempSession, new NotificationMessage(notification));
+                }
+            }
+
+            //CHECK, CHECKMATE, and STALEMATE
+            //if (game.game().isInStalemate())
+        }
+        catch (InvalidMoveException e){
+            throw new Exception(e.getMessage());
+        }
     }
 
     private void leaveGame(Session session, String username, LeaveCommand command){
