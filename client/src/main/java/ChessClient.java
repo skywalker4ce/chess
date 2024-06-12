@@ -37,7 +37,6 @@ public class ChessClient implements ServerMessageObserver {
     private static void preLoginMenu() throws Exception {
         Scanner scanner = new Scanner(System.in);
         String authToken;
-        facade.clear();
         menu:
         while (true){
             System.out.println(SET_TEXT_BOLD + "Enter a number (1-4) to continue:" + RESET_TEXT_BOLD_FAINT);

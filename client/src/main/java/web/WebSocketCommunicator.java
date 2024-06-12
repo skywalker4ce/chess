@@ -1,6 +1,12 @@
 package web;
 
-
+import chess.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import model.GameData;
+import org.junit.jupiter.api.DisplayName;
+import ui.DisplayBoard;
+import websocket.messages.*;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -17,6 +23,24 @@ public class WebSocketCommunicator extends Endpoint {
 
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {
             public void onMessage(String message) {
+                try{
+                    GsonBuilder builder = new GsonBuilder();
+                    builder.registerTypeAdapter(ServerMessage.class, new ServerMessageTypeAdapter());
+                    Gson gson = builder.create();
+
+                    ServerMessage serverMessage = gson.fromJson(message, ServerMessage.class);
+
+                    switch (serverMessage.getServerMessageType()) {
+                        case LOAD_GAME -> loadGame(session, (LoadGameMessage) serverMessage);
+                        case ERROR -> error(session, (ErrorMessage) serverMessage);
+                        case NOTIFICATION -> notification(session, (NotificationMessage) serverMessage);
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    //sendMessage(session.getRemote(), new ErrorMessage("Error: " + ex.getMessage()));
+                }
+
+
                 System.out.println(message);
             }
         });
@@ -27,12 +51,20 @@ public class WebSocketCommunicator extends Endpoint {
     }
 
     public void onOpen(Session session, EndpointConfig endpointConfig) {
-        //this.session = session;
-        System.out.println("Server Connected");
-        try {
-            this.session.getBasicRemote().sendText("Help");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
+
+    private void loadGame(Session session, LoadGameMessage message) throws IOException {
+        GameData game = message.getGame();
+        DisplayBoard display = new DisplayBoard();
+        display.display(game.game().getBoard(), "WHITE", null, null);
+
+    }
+
+    private void error(Session session, ErrorMessage message){
+
+    }
+
+    private void notification(Session session, NotificationMessage message){
+    }
+
 }
