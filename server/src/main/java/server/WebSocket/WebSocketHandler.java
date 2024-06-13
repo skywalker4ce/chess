@@ -121,6 +121,8 @@ public class WebSocketHandler{
         SQLGameDAO gameAccess = new SQLGameDAO();
         GameData game = gameAccess.getGame(command.getGameID());
         gameAccess.updateGame(game, null, playerTitle);
+        Set<Session> tempSet = connections.get(command.getGameID());
+        tempSet.remove(session);
 
         //NOTIFICATION
         String notification = username + " left the game.";
@@ -175,10 +177,10 @@ public class WebSocketHandler{
         if (game == null){
             throw new Exception("Invalid Game ID");
         }
-        if (game.blackUsername().equals(username)){
+        if (game.blackUsername() != null && game.blackUsername().equals(username)){
             playerTitle = "BLACK";
         }
-        else if (game.whiteUsername().equals(username)){
+        else if (game.whiteUsername() != null && game.whiteUsername().equals(username)){
             playerTitle = "WHITE";
         }
         else {
