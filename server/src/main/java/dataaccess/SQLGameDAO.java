@@ -140,22 +140,25 @@ public class SQLGameDAO implements GameDAO{
 
     public void updateGame(GameData game, String username, String playerColor){
         if (Objects.equals(playerColor, "WHITE")) {
-            var updateGameSQL = "UPDATE game SET whiteUsername = ? WHERE gameID = ?;";
+            var updateGameSQL = "UPDATE game SET whiteUsername = ?, game = ? WHERE gameID = ?;";
             executeUpdate(game, username, updateGameSQL);
         }
         else if (Objects.equals(playerColor, "BLACK")) {
-            var updateGameSQL = "UPDATE game SET blackUsername = ? WHERE gameID = ?;";
+            var updateGameSQL = "UPDATE game SET blackUsername = ?, game = ? WHERE gameID = ?;";
             executeUpdate(game, username, updateGameSQL);
         }
     }
 
     private void executeUpdate(GameData game, String username, String updateGameSQL) {
+        var serializer = new Gson();
+        var tempGame = serializer.toJson(game.game());
         Connection conn = null;
         try{
             conn = getConnection();
             try(PreparedStatement stmt = conn.prepareStatement(updateGameSQL)){
                 stmt.setString(1, username);
-                stmt.setInt(2, game.gameID());
+                stmt.setString(2, tempGame);
+                stmt.setInt(3, game.gameID());
                 stmt.executeUpdate();
             }
         }

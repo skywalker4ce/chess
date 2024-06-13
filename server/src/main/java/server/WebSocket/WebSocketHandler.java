@@ -29,6 +29,8 @@ public class WebSocketHandler{
     Map<Integer, Set<Session>> connections = new HashMap<>();
     String playerTitle = null;
     Boolean resigned = false;
+    SQLGameDAO gameFunctions = new SQLGameDAO();
+    GameData chessGame;
 
     @OnWebSocketMessage
     public void onMessage(Session session, String msg) throws Exception {
@@ -58,8 +60,8 @@ public class WebSocketHandler{
 
     private void connect(Session session, String username, ConnectCommand command) throws Exception {
         //LOAD_GAME message
-        GameData game = new SQLGameDAO().getGame(command.getGameID());
-        LoadGameMessage loadGame = new LoadGameMessage(game);
+        //chessGame = gameFunctions.getGame(command.getGameID());
+        LoadGameMessage loadGame = new LoadGameMessage(chessGame);
         var jsonLoadGame = new Gson().toJson(loadGame);
         session.getRemote().sendString(jsonLoadGame);
 
@@ -72,19 +74,20 @@ public class WebSocketHandler{
         if (Objects.equals(playerTitle, "OBSERVER")){
             throw new Exception("Can't make a move as an observer");
         }
-        GameData game = new SQLGameDAO().getGame(command.getGameID());
+        //chessGame = gameFunctions.getGame(command.getGameID());
         try {
             //VALIDATE and MAKE_MOVE
-            if (!Objects.equals(game.game().getBoard().getPiece(command.getMove().getStartPosition()).getTeamColor().toString(), playerTitle)) {
+            if (!Objects.equals(chessGame.game().getBoard().getPiece(command.getMove().getStartPosition()).getTeamColor().toString(), playerTitle)) {
                 throw new Exception("You can't move that piece");
             }
             else {
-                game.game().makeMove(command.getMove());
-                game = new SQLGameDAO().getGame(command.getGameID());
+                chessGame.game().makeMove(command.getMove());
+                gameFunctions.updateGame(chessGame, username, playerTitle);
+                chessGame = gameFunctions.getGame(command.getGameID());
             }
 
             //LOAD_GAME and NOTIFICATION
-            LoadGameMessage loadGame = new LoadGameMessage(game);
+            LoadGameMessage loadGame = new LoadGameMessage(chessGame);
             var jsonLoadGame = new Gson().toJson(loadGame);
             String location = "Input move here";
             String notification = username + " moved to " + location;
@@ -97,16 +100,16 @@ public class WebSocketHandler{
             }
 
             //CHECK, CHECKMATE, and STALEMATE
-            if (game.game().isInStalemate(game.game().getTeamTurn())){
-                notification = game.game().getTeamTurn() + " is in Stalemate.";
+            if (chessGame.game().isInStalemate(chessGame.game().getTeamTurn())){
+                notification = chessGame.game().getTeamTurn() + " is in Stalemate.";
                 sendMessageToAll(command, notification);
             }
-            else if (game.game().isInCheckmate(game.game().getTeamTurn())) {
-                notification = game.game().getTeamTurn() + " is in Checkmate.";
+            else if (chessGame.game().isInCheckmate(chessGame.game().getTeamTurn())) {
+                notification = chessGame.game().getTeamTurn() + " is in Checkmate.";
                 sendMessageToAll(command, notification);
             }
-            else if (game.game().isInCheck(game.game().getTeamTurn())){
-                notification = game.game().getTeamTurn() + " is in Check.";
+            else if (chessGame.game().isInCheck(chessGame.game().getTeamTurn())){
+                notification = chessGame.game().getTeamTurn() + " is in Check.";
                 sendMessageToAll(command, notification);
             }
         }
@@ -118,11 +121,11 @@ public class WebSocketHandler{
 
     private void leaveGame(Session session, String username, LeaveCommand command) throws DataAccessException, IOException {
         //UPDATE GAME INFO
-        SQLGameDAO gameAccess = new SQLGameDAO();
-        GameData game = gameAccess.getGame(command.getGameID());
-        gameAccess.updateGame(game, null, playerTitle);
+        //chessGame = gameFunctions.getGame(command.getGameID());
+        gameFunctions.updateGame(chessGame, null, playerTitle);
         Set<Session> tempSet = connections.get(command.getGameID());
         tempSet.remove(session);
+        resigned = false;
 
         //NOTIFICATION
         String notification = username + " left the game.";
@@ -142,9 +145,10 @@ public class WebSocketHandler{
         }
 
         //UPDATE GAME TO RESIGN STATUS
-        SQLGameDAO gameAccess = new SQLGameDAO();
-        GameData game = gameAccess.getGame(command.getGameID());
-        game.game().isOver = true;
+        //chessGame = gameFunctions.getGame(command.getGameID());
+        chessGame.game().setIsOver(true);
+        gameFunctions.updateGame(chessGame, username, playerTitle);
+        chessGame = gameFunctions.getGame(command.getGameID());
 
         //NOTIFICATION
         String notification = username + " resigned.";
@@ -173,14 +177,14 @@ public class WebSocketHandler{
     }
 
     private void getPlayerInfo(UserGameCommand command, String username) throws Exception {
-        GameData game = new SQLGameDAO().getGame(command.getGameID());
-        if (game == null){
+        chessGame = gameFunctions.getGame(command.getGameID());
+        if (chessGame == null){
             throw new Exception("Invalid Game ID");
         }
-        if (game.blackUsername() != null && game.blackUsername().equals(username)){
+        if (chessGame.blackUsername() != null && chessGame.blackUsername().equals(username)){
             playerTitle = "BLACK";
         }
-        else if (game.whiteUsername() != null && game.whiteUsername().equals(username)){
+        else if (chessGame.whiteUsername() != null && chessGame.whiteUsername().equals(username)){
             playerTitle = "WHITE";
         }
         else {

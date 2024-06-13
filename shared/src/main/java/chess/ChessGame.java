@@ -13,13 +13,20 @@ public class ChessGame {
     private ChessBoard gameboard = new ChessBoard();
     private TeamColor team = TeamColor.WHITE;
     private Boolean makeMoveBoolean = false;                                 // this may need to change from a private variable
-    public Boolean isOver = false;
+    private boolean isOver;
 
     public ChessGame() {
         gameboard.resetBoard();
         setBoard(this.gameboard);
     }
 
+    public void setIsOver(boolean bool){
+        this.isOver = bool;
+    }
+
+    public boolean getIsOver(){
+        return isOver;
+    }
 
     /**
      * @return Which team's turn it is
