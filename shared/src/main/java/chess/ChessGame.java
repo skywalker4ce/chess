@@ -13,6 +13,7 @@ public class ChessGame {
     private ChessBoard gameboard = new ChessBoard();
     private TeamColor team = TeamColor.WHITE;
     private Boolean makeMoveBoolean = false;                                 // this may need to change from a private variable
+    public Boolean isOver = false;
 
     public ChessGame() {
         gameboard.resetBoard();
@@ -85,28 +86,30 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        ChessPosition initialPosition = move.getStartPosition();
-        Collection<ChessMove> potentialMoves = validMoves(initialPosition);
-        if (potentialMoves != null && potentialMoves.contains(move) && gameboard.getPiece(initialPosition).getTeamColor() == team){
-            //Update the chessboard to reflect this move
-            if (move.getPromotionPiece() != null){
-                ChessPiece.PieceType promotion = move.getPromotionPiece();
-                gameboard.addPiece(move.getEndPosition(), new ChessPiece(team, promotion));
-            }
-            else {
-                gameboard.addPiece(move.getEndPosition(), gameboard.getPiece(initialPosition));
-            }
-            gameboard.addPiece(initialPosition, null);
-            if (team == TeamColor.WHITE){
-                setTeamTurn(TeamColor.BLACK);
-            }
-            else {
-                setTeamTurn(TeamColor.WHITE);
-            }
+        if (!isOver) {
+            ChessPosition initialPosition = move.getStartPosition();
+            Collection<ChessMove> potentialMoves = validMoves(initialPosition);
+            if (potentialMoves != null && potentialMoves.contains(move) && gameboard.getPiece(initialPosition).getTeamColor() == team) {
+                //Update the chessboard to reflect this move
+                if (move.getPromotionPiece() != null) {
+                    ChessPiece.PieceType promotion = move.getPromotionPiece();
+                    gameboard.addPiece(move.getEndPosition(), new ChessPiece(team, promotion));
+                } else {
+                    gameboard.addPiece(move.getEndPosition(), gameboard.getPiece(initialPosition));
+                }
+                gameboard.addPiece(initialPosition, null);
+                if (team == TeamColor.WHITE) {
+                    setTeamTurn(TeamColor.BLACK);
+                } else {
+                    setTeamTurn(TeamColor.WHITE);
+                }
 
+            } else {
+                throw new InvalidMoveException("That is an invalid move");
+            }
         }
         else {
-            throw new InvalidMoveException("That is an invalid move");
+            throw new InvalidMoveException("Game is Over. No more moves can be made.");
         }
     }
 
