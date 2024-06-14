@@ -1,7 +1,5 @@
 package server.WebSocket;
 
-import chess.ChessGame;
-import chess.ChessMove;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,10 +14,7 @@ import websocket.commands.*;
 import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
-
-import java.io.EOFException;
 import java.io.IOException;
-import java.rmi.server.ExportException;
 import java.util.*;
 
 
@@ -28,7 +23,7 @@ public class WebSocketHandler{
 
     Map<Integer, Set<Session>> connections = new HashMap<>();
     String playerTitle = null;
-    Boolean resigned = false;
+    boolean resigned = false;
     SQLGameDAO gameFunctions = new SQLGameDAO();
     GameData chessGame;
 
@@ -61,9 +56,12 @@ public class WebSocketHandler{
     private void connect(Session session, String username, ConnectCommand command) throws Exception {
         //LOAD_GAME message
         //chessGame = gameFunctions.getGame(command.getGameID());
+        resigned = false;
         LoadGameMessage loadGame = new LoadGameMessage(chessGame);
         var jsonLoadGame = new Gson().toJson(loadGame);
-        session.getRemote().sendString(jsonLoadGame);
+        if (session.isOpen()) {
+            session.getRemote().sendString(jsonLoadGame);
+        }
 
         //NOTIFICATION
         String notification = username + " joined the game as " + playerTitle;
@@ -93,7 +91,9 @@ public class WebSocketHandler{
             String notification = username + " moved to " + location;
             Set<Session> tempSet = connections.get(command.getGameID());
             for (Session tempSession : tempSet){
-                tempSession.getRemote().sendString(jsonLoadGame);
+                if (tempSession.isOpen()) {
+                    tempSession.getRemote().sendString(jsonLoadGame);
+                }
                 if (!tempSession.equals(session)){
                     sendNotification(tempSession, new NotificationMessage(notification));
                 }
@@ -210,12 +210,16 @@ public class WebSocketHandler{
 
     private void sendNotification(Session session, NotificationMessage message) throws IOException {
         var jsonNotification = new Gson().toJson(message);
-        session.getRemote().sendString(jsonNotification);
+        if (session.isOpen()) {
+            session.getRemote().sendString(jsonNotification);
+        }
     }
 
     private void sendError(Session session, ErrorMessage error) throws IOException {
         var jsonError = new Gson().toJson(error);
-        session.getRemote().sendString(jsonError);
+        if (session.isOpen()) {
+            session.getRemote().sendString(jsonError);
+        }
     }
 
 }
