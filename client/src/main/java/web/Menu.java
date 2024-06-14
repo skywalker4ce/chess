@@ -5,8 +5,10 @@ import chess.ChessPiece;
 import chess.ChessPosition;
 import model.GameData;
 import ui.DisplayBoard;
+import websocket.messages.ErrorMessage;
+import websocket.messages.LoadGameMessage;
+import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
-
 import java.util.*;
 
 import static ui.EscapeSequences.*;
@@ -21,8 +23,31 @@ public class Menu implements ServerMessageObserver {
     }
 
     @Override
-    public void notify(ServerMessage message){
+    public void notify(ServerMessage serverMessage){
+        switch (serverMessage.getServerMessageType()) {
+            case LOAD_GAME -> loadGame((LoadGameMessage) serverMessage);
+            case ERROR -> error((ErrorMessage) serverMessage);
+            case NOTIFICATION -> notification((NotificationMessage) serverMessage);
+        }
+    }
 
+    private void loadGame(LoadGameMessage message) {
+        GameData game = message.getGame();
+        DisplayBoard display = new DisplayBoard();
+        if (Objects.equals(this.getColorOfPlayer(), "OBSERVER")){
+            display.display(game.game().getBoard(), "WHITE", null, null);
+        }
+        else {
+            display.display(game.game().getBoard(), this.getColorOfPlayer(), null, null);
+        }
+    }
+
+    private void error(ErrorMessage message){
+        System.out.println(SET_TEXT_COLOR_RED + message.getErrorMessage() + RESET_TEXT_COLOR);
+    }
+
+    private void notification(NotificationMessage message){
+        System.out.println(SET_TEXT_COLOR_BLUE + message.getMessage() + RESET_TEXT_COLOR);
     }
 
     public void preLoginMenu() throws Exception {
