@@ -13,8 +13,4 @@ public class LoadGameMessage extends ServerMessage{
     public GameData getGame() {
         return game;
     }
-
-    public void setGame(GameData game) {
-        this.game = game;
-    }
 }

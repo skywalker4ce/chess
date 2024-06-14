@@ -173,35 +173,7 @@ public class Menu implements ServerMessageObserver {
             String response;
             switch (input) {
                 case "1":
-                    System.out.println("Enter a move: (first square position followed by second ex: b6b5)");
-                    String position = scanner.next();
-                    boolean correctData = true;
-                    char startRow = position.charAt(0);
-                    if (startRow < 97 || startRow > 104){
-                        correctData = false;
-                    }
-                    char startCol = position.charAt(1);
-                    if (startCol < 49 || startCol > 56){
-                        correctData = false;
-                    }
-                    char endRow = position.charAt(2);
-                    if (endRow < 97 || endRow > 104){
-                        correctData = false;
-                    }
-                    char endCol = position.charAt(3);
-                    if (endCol < 49 || endCol > 56){
-                        correctData = false;
-                    }
-                    ChessPiece.PieceType promotionPiece = null;
-                    if (correctData){
-                        ChessMove move = new ChessMove(new ChessPosition((char) startRow, (int) startCol - '1'), new ChessPosition((char) endRow, (int) endCol - '1'), promotionPiece);
-                        try {
-                            facade.makeMove(move, authToken, game.gameID());
-                        }
-                        catch (Exception e){
-                            System.out.println(SET_TEXT_COLOR_RED + e.getMessage() + RESET_TEXT_COLOR);
-                        }
-                    }
+                    gameMenuMakeMove(game, authToken, scanner);
                     break;
                 case "2":
                     System.out.println("Enter a move: (Piece position ex: a2)");
@@ -286,8 +258,37 @@ public class Menu implements ServerMessageObserver {
         }
     }
 
-
-
+    private void gameMenuMakeMove(GameData game, String authToken, Scanner scanner) {
+        System.out.println("Enter a move: (first square position followed by second ex: b6b5)");
+        String position = scanner.next();
+        boolean correctData = true;
+        char startRow = position.charAt(0);
+        if (startRow < 97 || startRow > 104){
+            correctData = false;
+        }
+        char startCol = position.charAt(1);
+        if (startCol < 49 || startCol > 56){
+            correctData = false;
+        }
+        char endRow = position.charAt(2);
+        if (endRow < 97 || endRow > 104){
+            correctData = false;
+        }
+        char endCol = position.charAt(3);
+        if (endCol < 49 || endCol > 56){
+            correctData = false;
+        }
+        ChessPiece.PieceType promotionPiece = null;
+        if (correctData){
+            ChessMove move = new ChessMove(new ChessPosition((char) startRow, (int) startCol - '1'), new ChessPosition((char) endRow, (int) endCol - '1'), promotionPiece);
+            try {
+                facade.makeMove(move, authToken, game.gameID());
+            }
+            catch (Exception e){
+                System.out.println(SET_TEXT_COLOR_RED + e.getMessage() + RESET_TEXT_COLOR);
+            }
+        }
+    }
 
 
     private void case1CreateGame(String authToken, Scanner scanner) throws Exception {

@@ -1,4 +1,4 @@
-package server.WebSocket;
+package server.websocket;
 
 import chess.ChessMove;
 import chess.InvalidMoveException;
@@ -180,16 +180,6 @@ public class WebSocketHandler{
             Set<Session> tempSet = connections.get(gameID);
             tempSet.add(session);
             }
-
-//        if (authTokenMap.isEmpty() || !authTokenMap.containsKey(session)){
-//            Set<String> authTokens = new HashSet<>();
-//            authTokens.add(authToken);
-//            authTokenMap.put(session, authTokens);
-//        }
-//        else {
-//            Set<String> tempAuthSet = authTokenMap.get(authToken);
-//            tempAuthSet.add(authToken);
-//        }
     }
 
     private void getPlayerInfo(UserGameCommand command, String username) throws Exception {
@@ -229,10 +219,6 @@ public class WebSocketHandler{
         if (session.isOpen()) {
             session.getRemote().sendString(jsonNotification);
         }
-//        else {
-//            Set<Session> sessions = connections.get(chessGame.gameID());
-//            sessions.remove(session);
-//        }
     }
 
     private void sendError(Session session, ErrorMessage error) throws IOException {
@@ -240,10 +226,6 @@ public class WebSocketHandler{
         if (session.isOpen()) {
             session.getRemote().sendString(jsonError);
         }
-//        else {
-//            Set<Session> sessions = connections.get(chessGame.gameID());
-//            sessions.remove(session);
-//        }
     }
 
 }

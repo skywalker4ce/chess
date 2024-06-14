@@ -1,7 +1,7 @@
 package server;
 
 import dataaccess.DataAccessException;
-import server.WebSocket.WebSocketHandler;
+import server.websocket.WebSocketHandler;
 import service.UnauthorizedException;
 import spark.*;
 
