@@ -1,5 +1,6 @@
 package server.websocket;
 
+import chess.ChessGame;
 import chess.ChessMove;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
@@ -26,7 +27,6 @@ public class WebSocketHandler{
     String playerTitle = null;
     boolean resigned = false;
     SQLGameDAO gameFunctions = new SQLGameDAO();
-    GameData chessGame;
     Map<Session, Set<String>> authTokenMap = new HashMap<>();
 
     @OnWebSocketMessage
@@ -57,7 +57,7 @@ public class WebSocketHandler{
 
     private void connect(Session session, String username, ConnectCommand command) throws Exception {
         //LOAD_GAME message
-        //chessGame = gameFunctions.getGame(command.getGameID());
+        GameData chessGame = gameFunctions.getGame(command.getGameID());
         resigned = false;
         LoadGameMessage loadGame = new LoadGameMessage(chessGame);
         var jsonLoadGame = new Gson().toJson(loadGame);
@@ -71,6 +71,7 @@ public class WebSocketHandler{
     }
 
     private void makeMove(Session session, String username, MakeMoveCommand command) throws Exception {
+        GameData chessGame = gameFunctions.getGame(command.getGameID());
         if (Objects.equals(playerTitle, "OBSERVER")){
             throw new Exception("Can't make a move as an observer");
         }
@@ -128,9 +129,12 @@ public class WebSocketHandler{
 
     private void leaveGame(Session session, String username, LeaveCommand command) throws DataAccessException, IOException {
         //UPDATE GAME INFO
+        GameData chessGame = gameFunctions.getGame(command.getGameID());
         gameFunctions.updateGame(chessGame, null, playerTitle);
         Set<Session> tempSet = connections.get(command.getGameID());
         tempSet.remove(session);
+        session.close();
+        connections.put(command.getGameID(), tempSet);
         resigned = false;
 
         //NOTIFICATION
@@ -139,6 +143,7 @@ public class WebSocketHandler{
     }
 
     private void resign(Session session, String username, ResignCommand command) throws Exception {
+        GameData chessGame = gameFunctions.getGame(command.getGameID());
         if (Objects.equals(playerTitle, "OBSERVER")){
             throw new Exception("Can't resign as an observer");
         }
@@ -179,11 +184,12 @@ public class WebSocketHandler{
         else {
             Set<Session> tempSet = connections.get(gameID);
             tempSet.add(session);
+            connections.put(gameID, tempSet);
             }
     }
 
     private void getPlayerInfo(UserGameCommand command, String username) throws Exception {
-        chessGame = gameFunctions.getGame(command.getGameID());
+        GameData chessGame = gameFunctions.getGame(command.getGameID());
         if (chessGame == null){
             throw new Exception("Invalid Game ID");
         }

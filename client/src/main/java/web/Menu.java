@@ -34,6 +34,7 @@ public class Menu implements ServerMessageObserver {
     private void loadGame(LoadGameMessage message) {
         GameData game = message.getGame();
         DisplayBoard display = new DisplayBoard();
+        System.out.println(ERASE_SCREEN + moveCursorToLocation(0,0));
         if (Objects.equals(this.getColorOfPlayer(), "OBSERVER")){
             display.display(game.game().getBoard(), "WHITE", null, null);
         }

@@ -19,6 +19,7 @@ public class WebSocketCommunicator extends Endpoint {
         this.session = container.connectToServer(this, uri);
 
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {
+            @Override
             public void onMessage(String message) {
                 try{
                     GsonBuilder builder = new GsonBuilder();
@@ -38,7 +39,7 @@ public class WebSocketCommunicator extends Endpoint {
     public void send(String msg) throws Exception {
         this.session.getBasicRemote().sendText(msg);
     }
-
+    @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
 
