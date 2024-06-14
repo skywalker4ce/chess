@@ -1,5 +1,8 @@
 package web;
 
+import chess.ChessMove;
+import chess.ChessPiece;
+import chess.ChessPosition;
 import model.GameData;
 import ui.DisplayBoard;
 import websocket.messages.ServerMessage;
@@ -145,10 +148,59 @@ public class Menu implements ServerMessageObserver {
             String response;
             switch (input) {
                 case "1":
-                    facade.makeMove();
+                    System.out.println("Enter a move: (first square position followed by second ex: b6b5");
+                    String position = scanner.next();
+                    boolean correctData = true;
+                    char startRow = position.charAt(0);
+                    if (startRow - 'a' < 0 || startRow - 'a' > 7){
+                        correctData = false;
+                    }
+                    char startCol = position.charAt(1);
+                    if (startCol - '1' < 0 || startCol - '1' > 7){
+                        correctData = false;
+                    }
+                    char endRow = position.charAt(2);
+                    if (endRow - 'a' < 0 || endRow - 'a' > 7){
+                        correctData = false;
+                    }
+                    char endCol = position.charAt(3);
+                    if (endCol - '1' < 0 || endCol - '1' > 7){
+                        correctData = false;
+                    }
+                    ChessPiece.PieceType promotionPiece = null;
+                    if (correctData){
+                        ChessMove move = new ChessMove(new ChessPosition(startRow, startCol), new ChessPosition(endRow, endCol), promotionPiece);
+                        try {
+                            facade.makeMove(move, authToken, game.gameID());
+                        }
+                        catch (Exception e){
+                            System.out.println(SET_TEXT_COLOR_RED + e.getMessage() + RESET_TEXT_COLOR);
+                        }
+                    }
                     break;
                 case "2":
-
+                    System.out.println("Enter a move: (first square position followed by second ex: b6b5");
+                    response = scanner.next();
+                    boolean correctPosition = true;
+                    char row = response.charAt(0);
+                    if (row - 'a' < 0 || row - 'a' > 7){
+                        correctPosition = false;
+                    }
+                    char col = response.charAt(1);
+                    if (col - '1' < 0 || col - '1' > 7){
+                        correctPosition = false;
+                    }
+                    if (correctPosition){
+                        ChessPosition wantedPosition = new ChessPosition(row, col);
+                        DisplayBoard displayBoard = new DisplayBoard();
+                        Collection<ChessMove> validMoves = game.game().validMoves(wantedPosition);
+                        if (Objects.equals(colorOfPlayer, "OBSERVER")){
+                            displayBoard.display(game.game().getBoard(), "WHITE", validMoves, wantedPosition);
+                        }
+                        else {
+                            displayBoard.display(game.game().getBoard(), colorOfPlayer, validMoves, wantedPosition);
+                        }
+                    }
                     break;
                 case "3":
                     DisplayBoard newBoard = new DisplayBoard();

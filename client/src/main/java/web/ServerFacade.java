@@ -1,5 +1,6 @@
 package web;
 
+import chess.ChessMove;
 import com.google.gson.Gson;
 import model.AuthData;
 import model.GameData;
@@ -10,6 +11,7 @@ import request.LoginRequest;
 import result.ListGamesResult;
 import websocket.commands.ConnectCommand;
 import websocket.commands.LeaveCommand;
+import websocket.commands.MakeMoveCommand;
 import websocket.commands.ResignCommand;
 
 import java.net.URI;
@@ -116,8 +118,11 @@ public class ServerFacade {
         communicator.send(jsonConnect);
     }
 
-    public void makeMove(){
-
+    public void makeMove(ChessMove move, String authToken, int gameID) throws Exception {
+        WebSocketCommunicator communicator = new WebSocketCommunicator(port, menu);
+        MakeMoveCommand makeMove = new MakeMoveCommand(authToken, gameID, move);
+        var jsonMakeMove = new Gson().toJson(makeMove);
+        communicator.send(jsonMakeMove);
     }
 
     public void resign(String authToken, int gameID) throws Exception {

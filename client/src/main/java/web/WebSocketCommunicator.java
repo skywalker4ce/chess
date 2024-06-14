@@ -42,9 +42,6 @@ public class WebSocketCommunicator extends Endpoint {
                     ex.printStackTrace();
                     //sendMessage(session.getRemote(), new ErrorMessage("Error: " + ex.getMessage()));
                 }
-
-
-                System.out.println(message);
             }
         });
     }
