@@ -265,6 +265,7 @@ public class Menu implements ServerMessageObserver {
                     if (Objects.equals(response, "y") || Objects.equals(response, "Y")) {
                         try {
                             facade.leave(authToken, game.gameID());
+                            return;
                         }
                         catch (Exception e) {
                             System.out.println(SET_TEXT_COLOR_RED + e.getMessage() + RESET_TEXT_COLOR);

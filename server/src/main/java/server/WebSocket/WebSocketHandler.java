@@ -1,5 +1,6 @@
 package server.WebSocket;
 
+import chess.ChessMove;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,6 +27,7 @@ public class WebSocketHandler{
     boolean resigned = false;
     SQLGameDAO gameFunctions = new SQLGameDAO();
     GameData chessGame;
+    Map<Session, Set<String>> authTokenMap = new HashMap<>();
 
     @OnWebSocketMessage
     public void onMessage(Session session, String msg) throws Exception {
@@ -38,7 +40,7 @@ public class WebSocketHandler{
 
             String username = getUsername(command.getAuthString());
 
-            saveSession(command.getGameID(), session);
+            saveSession(command.getGameID(), session, command.getAuthString());
 
             getPlayerInfo(command, username);
 
@@ -87,8 +89,13 @@ public class WebSocketHandler{
             //LOAD_GAME and NOTIFICATION
             LoadGameMessage loadGame = new LoadGameMessage(chessGame);
             var jsonLoadGame = new Gson().toJson(loadGame);
-            String location = "Input move here";
-            String notification = username + " moved to " + location;
+            ChessMove writtenMove = command.getMove();
+            int row = writtenMove.getEndPosition().getRow();
+            int col = writtenMove.getEndPosition().getColumn();
+            int tempRow = row;
+            row = 'a' + col;
+            col = tempRow + 1;
+            String notification = username + " moved to " + ((char) row) + col;
             Set<Session> tempSet = connections.get(command.getGameID());
             for (Session tempSession : tempSet){
                 if (tempSession.isOpen()) {
@@ -121,7 +128,6 @@ public class WebSocketHandler{
 
     private void leaveGame(Session session, String username, LeaveCommand command) throws DataAccessException, IOException {
         //UPDATE GAME INFO
-        //chessGame = gameFunctions.getGame(command.getGameID());
         gameFunctions.updateGame(chessGame, null, playerTitle);
         Set<Session> tempSet = connections.get(command.getGameID());
         tempSet.remove(session);
@@ -164,7 +170,7 @@ public class WebSocketHandler{
         return auth.username();
     }
 
-    private void saveSession(int gameID, Session session){
+    private void saveSession(int gameID, Session session, String authToken){
         if (connections.isEmpty() || !connections.containsKey(gameID)){
             Set<Session> sessions = new HashSet<>();
             sessions.add(session);
@@ -174,6 +180,16 @@ public class WebSocketHandler{
             Set<Session> tempSet = connections.get(gameID);
             tempSet.add(session);
             }
+
+//        if (authTokenMap.isEmpty() || !authTokenMap.containsKey(session)){
+//            Set<String> authTokens = new HashSet<>();
+//            authTokens.add(authToken);
+//            authTokenMap.put(session, authTokens);
+//        }
+//        else {
+//            Set<String> tempAuthSet = authTokenMap.get(authToken);
+//            tempAuthSet.add(authToken);
+//        }
     }
 
     private void getPlayerInfo(UserGameCommand command, String username) throws Exception {
@@ -213,6 +229,10 @@ public class WebSocketHandler{
         if (session.isOpen()) {
             session.getRemote().sendString(jsonNotification);
         }
+//        else {
+//            Set<Session> sessions = connections.get(chessGame.gameID());
+//            sessions.remove(session);
+//        }
     }
 
     private void sendError(Session session, ErrorMessage error) throws IOException {
@@ -220,6 +240,10 @@ public class WebSocketHandler{
         if (session.isOpen()) {
             session.getRemote().sendString(jsonError);
         }
+//        else {
+//            Set<Session> sessions = connections.get(chessGame.gameID());
+//            sessions.remove(session);
+//        }
     }
 
 }
