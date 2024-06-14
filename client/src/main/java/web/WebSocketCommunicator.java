@@ -11,12 +11,15 @@ import websocket.messages.*;
 import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Objects;
 
 
 public class WebSocketCommunicator extends Endpoint {
     private Session session;
+    private Menu menu;
 
-    public WebSocketCommunicator(int port) throws Exception {
+    public WebSocketCommunicator(int port, Menu menu) throws Exception {
+        this.menu = menu;
         URI uri = new URI("ws://localhost:" + port + "/ws");
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         this.session = container.connectToServer(this, uri);
@@ -56,8 +59,12 @@ public class WebSocketCommunicator extends Endpoint {
     private void loadGame(Session session, LoadGameMessage message) throws IOException {
         GameData game = message.getGame();
         DisplayBoard display = new DisplayBoard();
-        display.display(game.game().getBoard(), "WHITE", null, null);
-
+        if (Objects.equals(menu.getColorOfPlayer(), "OBSERVER")){
+            display.display(game.game().getBoard(), "WHITE", null, null);
+        }
+        else {
+            display.display(game.game().getBoard(), menu.getColorOfPlayer(), null, null);
+        }
     }
 
     private void error(Session session, ErrorMessage message){

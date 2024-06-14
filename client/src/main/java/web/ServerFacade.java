@@ -9,6 +9,8 @@ import request.JoinGameRequest;
 import request.LoginRequest;
 import result.ListGamesResult;
 import websocket.commands.ConnectCommand;
+import websocket.commands.LeaveCommand;
+import websocket.commands.ResignCommand;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -17,9 +19,16 @@ import java.util.Objects;
 public class ServerFacade {
     private HttpCommunicator connector = new HttpCommunicator();
     int port;
+    Menu menu;
 
     public ServerFacade(int port){
         this.port = port;
+    }
+
+    public ServerFacade(int port, Menu menu){
+        this.port = port;
+        this.menu = menu;
+
     }
 
     public String register(String username, String password, String email) throws Exception {
@@ -101,9 +110,27 @@ public class ServerFacade {
     }
 
     public void connect(String authToken, int gameID) throws Exception {
-        WebSocketCommunicator communicator = new WebSocketCommunicator(port);
+        WebSocketCommunicator communicator = new WebSocketCommunicator(port, menu);
         ConnectCommand connect = new ConnectCommand(authToken, gameID);
         var jsonConnect = new Gson().toJson(connect);
         communicator.send(jsonConnect);
+    }
+
+    public void makeMove(){
+
+    }
+
+    public void resign(String authToken, int gameID) throws Exception {
+        WebSocketCommunicator communicator = new WebSocketCommunicator(port, menu);
+        ResignCommand resign = new ResignCommand(authToken, gameID);
+        var jsonResign = new Gson().toJson(resign);
+        communicator.send(jsonResign);
+    }
+
+    public void leave(String authToken, int gameID) throws Exception {
+        WebSocketCommunicator communicator = new WebSocketCommunicator(port, menu);
+        LeaveCommand leave = new LeaveCommand(authToken, gameID);
+        var jsonLeave = new Gson().toJson(leave);
+        communicator.send(jsonLeave);
     }
 }
