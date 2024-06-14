@@ -148,28 +148,28 @@ public class Menu implements ServerMessageObserver {
             String response;
             switch (input) {
                 case "1":
-                    System.out.println("Enter a move: (first square position followed by second ex: b6b5");
+                    System.out.println("Enter a move: (first square position followed by second ex: b6b5)");
                     String position = scanner.next();
                     boolean correctData = true;
                     char startRow = position.charAt(0);
-                    if (startRow - 'a' < 0 || startRow - 'a' > 7){
+                    if (startRow < 97 || startRow > 104){
                         correctData = false;
                     }
                     char startCol = position.charAt(1);
-                    if (startCol - '1' < 0 || startCol - '1' > 7){
+                    if (startCol < 49 || startCol > 56){
                         correctData = false;
                     }
                     char endRow = position.charAt(2);
-                    if (endRow - 'a' < 0 || endRow - 'a' > 7){
+                    if (endRow < 97 || endRow > 104){
                         correctData = false;
                     }
                     char endCol = position.charAt(3);
-                    if (endCol - '1' < 0 || endCol - '1' > 7){
+                    if (endCol < 49 || endCol > 56){
                         correctData = false;
                     }
                     ChessPiece.PieceType promotionPiece = null;
                     if (correctData){
-                        ChessMove move = new ChessMove(new ChessPosition(startRow, startCol), new ChessPosition(endRow, endCol), promotionPiece);
+                        ChessMove move = new ChessMove(new ChessPosition((char) startRow, (int) startCol - '1'), new ChessPosition((char) endRow, (int) endCol - '1'), promotionPiece);
                         try {
                             facade.makeMove(move, authToken, game.gameID());
                         }
@@ -179,19 +179,19 @@ public class Menu implements ServerMessageObserver {
                     }
                     break;
                 case "2":
-                    System.out.println("Enter a move: (first square position followed by second ex: b6b5");
+                    System.out.println("Enter a move: (Piece position ex: a2)");
                     response = scanner.next();
                     boolean correctPosition = true;
                     char row = response.charAt(0);
-                    if (row - 'a' < 0 || row - 'a' > 7){
+                    if (row < 97 || row > 104){
                         correctPosition = false;
                     }
                     char col = response.charAt(1);
-                    if (col - '1' < 0 || col - '1' > 7){
+                    if (col < 49 || col > 56){
                         correctPosition = false;
                     }
                     if (correctPosition){
-                        ChessPosition wantedPosition = new ChessPosition(row, col);
+                        ChessPosition wantedPosition = new ChessPosition(row, (int) col - '1');
                         DisplayBoard displayBoard = new DisplayBoard();
                         Collection<ChessMove> validMoves = game.game().validMoves(wantedPosition);
                         if (Objects.equals(colorOfPlayer, "OBSERVER")){
@@ -204,6 +204,17 @@ public class Menu implements ServerMessageObserver {
                     break;
                 case "3":
                     DisplayBoard newBoard = new DisplayBoard();
+                    try {
+                        ArrayList<GameData> newGameList = facade.listGames(authToken);
+                        for (GameData gameData : newGameList){
+                            if (gameData.gameID() == game.gameID()){
+                                game = gameData;
+                            }
+                        }
+                    }
+                    catch (Exception e){
+                        System.out.println(SET_TEXT_COLOR_RED + e.getMessage() + RESET_TEXT_COLOR);
+                    }
                     if (Objects.equals(colorOfPlayer, "OBSERVER")) {
                         newBoard.display(game.game().getBoard(), "WHITE", null, null);
                     }

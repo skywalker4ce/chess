@@ -65,10 +65,12 @@ public class WebSocketCommunicator extends Endpoint {
     }
 
     private void error(Session session, ErrorMessage message){
+        System.out.println(message);
 
     }
 
     private void notification(Session session, NotificationMessage message){
+        System.out.println(message);
     }
 
 }
