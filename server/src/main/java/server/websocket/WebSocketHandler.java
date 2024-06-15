@@ -133,6 +133,7 @@ public class WebSocketHandler{
         gameFunctions.updateGame(chessGame, null, playerTitle);
         Set<Session> tempSet = connections.get(command.getGameID());
         tempSet.remove(session);
+        connections.remove(command.getGameID());
         session.close();
         connections.put(command.getGameID(), tempSet);
         resigned = false;
@@ -159,7 +160,6 @@ public class WebSocketHandler{
         //chessGame = gameFunctions.getGame(command.getGameID());
         chessGame.game().setIsOver(true);
         gameFunctions.updateGame(chessGame, username, playerTitle);
-        chessGame = gameFunctions.getGame(command.getGameID());
 
         //NOTIFICATION
         String notification = username + " resigned.";
@@ -184,6 +184,7 @@ public class WebSocketHandler{
         else {
             Set<Session> tempSet = connections.get(gameID);
             tempSet.add(session);
+            connections.remove(gameID);
             connections.put(gameID, tempSet);
             }
     }

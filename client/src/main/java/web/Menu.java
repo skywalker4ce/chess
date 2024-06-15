@@ -18,6 +18,9 @@ public class Menu implements ServerMessageObserver {
     private ServerFacade facade = new ServerFacade(8080, this);
     private String colorOfPlayer = null;
 
+    public Menu() throws Exception {
+    }
+
     public String getColorOfPlayer(){
         return colorOfPlayer;
     }

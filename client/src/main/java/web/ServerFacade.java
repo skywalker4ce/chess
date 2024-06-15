@@ -22,15 +22,16 @@ public class ServerFacade {
     private HttpCommunicator connector = new HttpCommunicator();
     int port;
     Menu menu;
+    WebSocketCommunicator communicator;
 
     public ServerFacade(int port){
         this.port = port;
     }
 
-    public ServerFacade(int port, Menu menu){
+    public ServerFacade(int port, Menu menu) throws Exception {
         this.port = port;
         this.menu = menu;
-
+        this.communicator = new WebSocketCommunicator(port, menu);
     }
 
     public String register(String username, String password, String email) throws Exception {
@@ -112,28 +113,24 @@ public class ServerFacade {
     }
 
     public void connect(String authToken, int gameID) throws Exception {
-        WebSocketCommunicator communicator = new WebSocketCommunicator(port, menu);
         ConnectCommand connect = new ConnectCommand(authToken, gameID);
         var jsonConnect = new Gson().toJson(connect);
         communicator.send(jsonConnect);
     }
 
     public void makeMove(ChessMove move, String authToken, int gameID) throws Exception {
-        WebSocketCommunicator communicator = new WebSocketCommunicator(port, menu);
         MakeMoveCommand makeMove = new MakeMoveCommand(authToken, gameID, move);
         var jsonMakeMove = new Gson().toJson(makeMove);
         communicator.send(jsonMakeMove);
     }
 
     public void resign(String authToken, int gameID) throws Exception {
-        WebSocketCommunicator communicator = new WebSocketCommunicator(port, menu);
         ResignCommand resign = new ResignCommand(authToken, gameID);
         var jsonResign = new Gson().toJson(resign);
         communicator.send(jsonResign);
     }
 
     public void leave(String authToken, int gameID) throws Exception {
-        WebSocketCommunicator communicator = new WebSocketCommunicator(port, menu);
         LeaveCommand leave = new LeaveCommand(authToken, gameID);
         var jsonLeave = new Gson().toJson(leave);
         communicator.send(jsonLeave);
